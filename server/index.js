@@ -12,7 +12,7 @@ app.use(express.json());
 // Default API
 app.get("/", (req, res) => {
   console.log("Default Get API Hit");
-  res.json({ message: "Welcome to my first backend project" });
+  res.json({ message: "Welcome to My Craving Project" });
 });
 
 // Default error handler
