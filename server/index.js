@@ -4,12 +4,21 @@ dotenv.config();
 import express from "express";
 
 import connectDB from "./src/config/dbConnection.config.js";
+import authRouter from "./src/routers/auth.route.js";
+import publicRouter from "./src/routers/public.route.js";
 import morgan from "morgan";
 import cors from "cors";
 
 const app = express();
 
+app.use(cors({ origin: "http://localhost:5173" }));
+
+app.use(morgan("dev"));
+
 app.use(express.json());
+
+app.use("/auth", authRouter);
+app.use("public", publicRouter);
 
 // Default API
 app.get("/", (req, res) => {
