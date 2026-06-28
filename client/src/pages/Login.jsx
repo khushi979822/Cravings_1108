@@ -1,6 +1,6 @@
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import foodTable from "../images/foodTable.webp";
+import heroImage from "../images/bgImage1-BgVBBcls.jpg";
 
 function Login() {
   const [userName, setUserName] = useState("");
@@ -8,77 +8,98 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("userName :", userName);
-    console.log("password :", password);
+
+    const payload = {
+      email: userName,
+      password,
+      page: "login",
+      action: "sign_in",
+    };
+
+    console.log("Login payload ready for backend:", payload);
   };
 
   return (
-    <section
-      className="min-h-screen bg-cover bg-center bg-no-repeat flex items-center"
-      style={{
-        backgroundImage: `url(${foodTable})`
-      }}
+    <div
+      className="min-h-screen flex items-center justify-start px-8 md:px-20 py-8 bg-cover bg-center relative"
+      style={{ backgroundImage: `url(${heroImage})` }}
     >
-      <div className="w-full px-6 lg:px-16">
+      <div className="absolute inset-0 bg-black/50"></div>
+
+      <div className="relative z-10 w-full max-w-md">
         <form
           onSubmit={handleSubmit}
-          className="w-full max-w-md rounded-xl bg-white px-10 py-8 shadow-lg"
+          className="flex flex-col gap-3 p-8 rounded-xl bg-white shadow-lg"
         >
-          <h2 className="mb-1 text-center text-3xl font-bold text-red-800">
-            Welcome Back
-          </h2>
+          <h2 className="text-3xl font-bold text-center">Welcome Back</h2>
 
-          <p className="mb-6 text-center text-gray-500">
-            Login to your Cravings account
+          <p className="text-center text-gray-500 mb-2">
+            Login to your Craving account
           </p>
 
-          <label className="mb-2 block font-bold">Email</label>
+          <label className="font-semibold">Email</label>
+
           <input
             type="email"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
             placeholder="Enter your email"
-            className="mb-4 w-full rounded-md border px-4 py-3 outline-none focus:border-red-700"
+            className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
           />
 
-          <label className="mb-2 block font-bold">Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
-            className="mb-4 w-full rounded-md border px-4 py-3 outline-none focus:border-red-700"
-          />
+          <label className="font-semibold">Password</label>
 
-          <div className="mb-5 flex items-center justify-between text-sm">
-            <label>
-              <input type="checkbox" className="mr-2" />
+          <div className="relative">
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+              className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+
+            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer">
+              👁️
+            </span>
+          </div>
+
+          <div className="flex justify-between items-center text-sm">
+            <label className="flex items-center gap-2">
+              <input type="checkbox" />
               Remember
             </label>
 
-            <a href="#" className="text-red-700">
+            <a href="#" className="text-orange-500 hover:text-orange-600">
               Forgot password?
             </a>
           </div>
 
-          <button className="mb-5 w-full rounded-md bg-red-700 py-3 font-bold text-white hover:bg-red-800">
+          <button
+            type="submit"
+            className="w-full py-3 bg-orange-700 text-white font-semibold rounded-lg hover:bg-orange-600 transition"
+          >
             Login
           </button>
 
-          <div className="mb-4 flex items-center gap-2 text-gray-500">
+          <div className="flex items-center gap-3">
             <hr className="flex-1" />
-            <span>Don't have an account?</span>
+            <span className="text-sm text-gray-500">
+              Don't have an account?
+            </span>
             <hr className="flex-1" />
           </div>
 
           <p className="text-center">
-            <Link to="/register" className="font-semibold text-red-700">
+            <Link
+              to="/register"
+              className="font-semibold text-orange-500 hover:text-orange-600"
+            >
               Create an account
             </Link>
           </p>
         </form>
       </div>
-    </section>
+    </div>
   );
 }
 
