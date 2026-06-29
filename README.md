@@ -1,11 +1,11 @@
 This is Craving Project 
 using MERN Stack
-Cravings is a modern food delivery site
+Cravings is a modern food delivery site.
 
 ## 🚀 Features
 
 - 🏠 Beautiful and responsive Home Page
-- 🔐 User Authentication (Login & Register)
+- 🔐 User Authentication (Login & Register
 - 🍽️ Featured Restaurants Section
 - 🔍 Search Restaurants & Dishes
 - 📊 Statistics Section
