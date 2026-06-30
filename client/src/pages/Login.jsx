@@ -1,22 +1,32 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import heroImage from "../images/bgImage1-BgVBBcls.jpg";
+import api from "../config/api.config";
+import toast from "react-hot-toast";
 
 function Login() {
-  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const payload = {
-      email: userName,
+      email: email.toLowerCase(),
       password,
-      page: "login",
-      action: "sign_in",
     };
 
-    console.log("Login payload ready for backend:", payload);
+    try {
+      const res = await api.post("/auth/login", payload);
+
+      toast.success(res.data.message || "Login successful");
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message ||
+          error.message ||
+          "Something went wrong"
+      );
+    }
   };
 
   return (
@@ -41,10 +51,11 @@ function Login() {
 
           <input
             type="email"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
             className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            required
           />
 
           <label className="font-semibold">Password</label>
@@ -56,6 +67,7 @@ function Login() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
               className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              required
             />
 
             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer">

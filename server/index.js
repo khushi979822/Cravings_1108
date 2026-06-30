@@ -18,7 +18,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 app.use("/auth", authRouter);
-app.use("public", publicRouter);
+app.use("/public", publicRouter);
 
 // Default API
 app.get("/", (req, res) => {
