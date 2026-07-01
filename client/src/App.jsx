@@ -7,14 +7,14 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Contact_Us from "./pages/Contact_Us";
 import { Toaster } from "react-hot-toast";
-
+import UserDashboard from "./pages/dashboard/UserDashboard";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-    
     <BrowserRouter>
       <div className="min-h-screen flex flex-col">
+        <Toaster />
         <Header />
 
         <main className="flex-1">
@@ -23,12 +23,13 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/contact" element={<Contact_Us />} />
+
+            {/* Dashboard route */}
+            <Route path="/user/dashboard" element={<UserDashboard />} />
           </Routes>
         </main>
 
         <Footer />
-
-        <Toaster position="top-right" />
       </div>
     </BrowserRouter>
   );

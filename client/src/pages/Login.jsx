@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import heroImage from "../images/bgImage1-BgVBBcls.jpg";
 import api from "../config/api.config";
 import toast from "react-hot-toast";
 
 function Login() {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -19,13 +21,13 @@ function Login() {
     try {
       const res = await api.post("/auth/login", payload);
 
-      toast.success(res.data.message || "Login successful");
+      toast.success(res.data.message);
+      console.log(res.data.data);
+      sessionStorage.setItem("UserData", JSON.stringify(res.data.data));
+      navigate("/user/dashboard");
     } catch (error) {
       toast.error(
-        error.response?.data?.message ||
-          error.message ||
-          "Something went wrong"
-      );
+        error.response.status + "|" + error.response?.data?.message ||error.message);
     }
   };
 
