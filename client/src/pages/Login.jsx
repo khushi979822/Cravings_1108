@@ -3,31 +3,46 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import heroImage from "../images/bgImage1-BgVBBcls.jpg";
 import api from "../config/api.config";
 import toast from "react-hot-toast";
+import { useAuth } from "../context/AuthContext";
 
 function Login() {
+  const { setUser, setIsLogin, isLogin } = useAuth();
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [loginData, setLoginData] = useState({
+    email: "",
+    password: "",
+  });
+  const [validateError, setValidateError] = useState();
+  const handleChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
 
+    setLoginData((prevData) => ({ ...prevData, [name]: value }));
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    console.log("Loging data submitted:" , loginData);
+    
     const payload = {
-      email: email.toLowerCase(),
-      password,
+      email: loginData.email.toLowerCase(),
+      password: loginData.password,
     };
 
     try {
       const res = await api.post("/auth/login", payload);
 
       toast.success(res.data.message);
-      console.log(res.data.data);
+
       sessionStorage.setItem("UserData", JSON.stringify(res.data.data));
+      setUser(res.data.data);
+      // setIsLogin(true);
       navigate("/user/dashboard");
     } catch (error) {
       toast.error(
-        error.response.status + "|" + error.response?.data?.message ||error.message);
+        error.response.status + "|" + error.response?.data?.message ||
+          error.message,
+      );
     }
   };
 
