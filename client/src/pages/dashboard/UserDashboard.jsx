@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 import Sidebar from "../../components/userDashboard/Sidebar";
 import Overview from "../../components/userDashboard/Overview";
 import Orders from "../../components/userDashboard/Orders";
@@ -10,8 +11,8 @@ const UserDashboard = () => {
 
   return (
     <>
-      <div className="flex h-[92vh]">
-        <div className="w-1/6 border border-red-500 h-full">
+      <div className=" flex h-[92vh] ">
+        <div className="w-1/6 border border-red-500 h-full p-3">
           <Sidebar active={active} setActive={setActive} />
         </div>
         <div className="w-5/6 border border-green-500 h-full">

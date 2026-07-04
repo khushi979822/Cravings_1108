@@ -2,16 +2,27 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "../images/craveing logo.png";
 import { useAuth } from "../context/AuthContext";
 import { AiOutlineLogout } from "react-icons/ai";
+import api from "../config/api.config.js";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
   const { user, setUser, isLogin, setIsLogin } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    sessionStorage.removeItem("UserData");
-    setIsLogin(false);
-    setUser(null);
-    navigate("/");
+  const handleLogout = async () => {
+    try {
+      const res = await api.get("/auth/logout");
+      sessionStorage.removeItem("UserData");
+      setIsLogin(false);
+      setUser(false);
+      navigate("/");
+      toast.success(res.data.message);
+    } catch (error) {
+      toast.error(
+        error.response.status + " | " + error.response?.data?.message ||
+          error.message,
+      );
+    }
   };
 
   return (
@@ -40,19 +51,16 @@ const Navbar = () => {
         </Link>
 
         {isLogin ? (
-          <div className="border-s-2 flex justify-center items-center gap-4 px-4">
+          <div className="border-l-2 flex items-center gap-4 pl-4">
             <div className="w-8 h-8 rounded-full overflow-hidden">
               <img
                 src={user?.photo}
-                alt="User"
+                alt={user?.fullName}
                 className="w-full h-full object-cover"
               />
             </div>
 
-            <Link
-              to="/user/dashboard"
-              className="text-white hover:underline hover:text-orange-100"
-            >
+            <Link to="/user/dashboard" className="text-white hover:underline">
               {user?.fullName}
             </Link>
 
