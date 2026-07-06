@@ -1,8 +1,10 @@
+import cloudinary from "../config/cloudinary.config.js";
 import User from "../models/user.model.js";
 
 export const EditUserProfile = async (req, res, next) => {
   try {
     const { email, fullName, phone } = req.body;
+    const newPhoto = req.file;
 
     if (!email || !fullName || !phone) {
       const error = new Error("All fields Required");
@@ -15,6 +17,18 @@ export const EditUserProfile = async (req, res, next) => {
       const error = new Error("Email not registred");
       error.statusCode = 404;
       return next(error);
+    }
+
+    if (newPhoto) {
+      const b64 = Buffer.from(newPhoto.Buffer).toString("base64");
+      const dataURI = `data:${newPhoto.mimetype};base64,{b64}`;
+
+      const result = await cloudinary.uploader.upload(dataURI, {
+        folder: "Cravings_1108/profile",
+        width: 500,
+        height: 500,
+        crop: "fill",
+      });
     }
 
     existingUser.fullName = fullName;
