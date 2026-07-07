@@ -54,7 +54,7 @@ const Navbar = () => {
           <div className="border-l-2 flex items-center gap-4 pl-4">
             <div className="w-8 h-8 rounded-full overflow-hidden">
               <img
-                src={user?.photo}
+                src={user?.photo.url}
                 alt={user?.fullName}
                 className="w-full h-full object-cover"
               />
