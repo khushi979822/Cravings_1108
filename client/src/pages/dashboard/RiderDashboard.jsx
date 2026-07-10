@@ -4,7 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import RiderSidebar from "../../components/riderDashboard/RiderSidebar";
 import RiderOverview from "../../components/riderDashboard/RiderOverview";
 import RiderOrders from "../../components/riderDashboard/RiderOrders";
-import RiderSetting from "../../components/riderDashboard/RiderSetting";
+import RiderSetting from "../../components/riderDashboard/RiderSettings";
 
 const RiderDashboard = () => {
   const { isLogin, role } = useAuth();

@@ -2,7 +2,7 @@ import React from "react";
 import Sidebar from "../../components/customerDashboard/CustomerSidebar";
 import CustomerOverview from "../../components/customerDashboard/CustomerOverview";
 import CustomerOrders from "../../components/customerDashboard/CustomerOrders";
-import CustomerSetting from "../../components/customerDashboard/CustomerSetting";
+import CustomerSetting from "../../components/customerDashboard/CustomerSettings";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 

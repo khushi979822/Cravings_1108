@@ -6,21 +6,37 @@ import api from "../config/api.config.js";
 import toast from "react-hot-toast";
 
 const Navbar = () => {
-  const { user, setUser, isLogin, setIsLogin } = useAuth();
+  const { user, isLogin, role, setUser, setIsLogin, setRole } = useAuth();
   const navigate = useNavigate();
+
+  const handleNavigate = () => {
+    //console.log("Handle Navigate", role);
+
+    if (role === "restaurant") {
+      navigate("/restaurant-dashboard");
+    } else if (role === "rider") {
+      navigate("/rider-dashboard");
+    } else if (role === "admin") {
+      navigate("/admin-dashboard");
+    } else {
+      navigate("/customer-dashboard");
+    }
+  };
 
   const handleLogout = async () => {
     try {
       const res = await api.get("/auth/logout");
-      sessionStorage.removeItem("UserData");
-      setIsLogin(false);
-      setUser(false);
-      navigate("/");
       toast.success(res.data.message);
+
+      sessionStorage.removeItem("cravingUser");
+      setUser(null);
+      setIsLogin(false);
+      setRole(null);
+      navigate("/");
     } catch (error) {
       toast.error(
-        error.response.status + " | " + error.response?.data?.message ||
-          error.message,
+        error.response?.data?.message ||
+          "Unknown error occurred during registration. Please try again.",
       );
     }
   };

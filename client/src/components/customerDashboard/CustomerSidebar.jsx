@@ -4,7 +4,7 @@ import { FaShoppingCart } from "react-icons/fa";
 import { MdFavoriteBorder } from "react-icons/md";
 import { IoMdSettings } from "react-icons/io";
 
-const CustomerCustomerSidebar = ({ activeTab, setActiveTab }) => {
+const CustomerSidebar = ({ activeTab, setActiveTab }) => {
   const mainTabs = [
     { name: "Overview", value: "overview", icon: <MdDashboard /> },
     { name: "Orders", value: "orders", icon: <FaShoppingCart /> },
@@ -44,4 +44,4 @@ const CustomerCustomerSidebar = ({ activeTab, setActiveTab }) => {
   );
 };
 
-export default CustomerCustomerCustomerSidebar;
+export default CustomerSidebar;
