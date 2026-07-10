@@ -4,7 +4,7 @@ import express from "express";
 import connectDB from "./src/config/dbConnection.config.js";
 import authRouter from "./src/routers/auth.route.js";
 import publicRouter from "./src/routers/public.route.js";
-import UserRouter from "./src/routers/user.route.js";
+import CommonRouter from "./src/routers/common.route.js";
 import morgan from "morgan";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -19,7 +19,7 @@ app.use(morgan("dev"));
 
 app.use("/auth", authRouter);
 app.use("/public", publicRouter);
-app.use("/user", UserRouter);
+app.use("/user", CommonRouter);
 
 //Default API
 app.get("/", (req, res) => {
