@@ -7,7 +7,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 const CustomerDashboard = () => {
-  const { isLogin, role } = useAuth();
+  const auth = useAuth();
+  const isLogin = auth?.isLogin ?? false;
+  const role = auth?.role ?? null;
   const navigate = useNavigate();
   const active = useLocation().state?.activeTab;
   const [activeTab, setActiveTab] = React.useState(active || "overview");

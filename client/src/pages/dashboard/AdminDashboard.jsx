@@ -7,7 +7,9 @@ import AdminOverview from "../../components/adminDashboard/AdminOverview";
 import AdminOrders from "../../components/adminDashboard/AdminOrders";
 
 const AdminDashboard = () => {
-  const { isLogin, role } = useAuth();
+  const auth = useAuth();
+  const isLogin = auth?.isLogin ?? false;
+  const role = auth?.role ?? null;
   const navigate = useNavigate();
   const active = useLocation().state?.activeTab;
   const [activeTab, setActiveTab] = React.useState(active || "overview");

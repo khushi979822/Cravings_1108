@@ -22,6 +22,6 @@ export const ContactUsForm = async (req, res, next) => {
     });
   } catch (error) {
     console.log(error.message);
-    next();
+    next(error);
   }
 };

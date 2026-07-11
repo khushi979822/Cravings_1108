@@ -7,7 +7,9 @@ import RestaurantSetting from "../../components/restaurantDashboard/RestaurantSe
 import RestaurantOrders from "../../components/restaurantDashboard/RestaurantOrders";
 
 const RestaurantDashboard = () => {
-  const { isLogin, role } = useAuth();
+  const auth = useAuth();
+  const isLogin = auth?.isLogin ?? false;
+  const role = auth?.role ?? null;
   const navigate = useNavigate();
   const active = useLocation().state?.activeTab;
   const [activeTab, setActiveTab] = React.useState(active || "overview");

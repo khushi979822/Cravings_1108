@@ -10,8 +10,6 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const handleNavigate = () => {
-    //console.log("Handle Navigate", role);
-
     if (role === "restaurant") {
       navigate("/restaurant-dashboard");
     } else if (role === "rider") {
@@ -29,6 +27,8 @@ const Navbar = () => {
       toast.success(res.data.message);
 
       sessionStorage.removeItem("cravingUser");
+      sessionStorage.removeItem("UserData");
+      sessionStorage.removeItem("cravingRole");
       setUser(null);
       setIsLogin(false);
       setRole(null);
@@ -76,9 +76,13 @@ const Navbar = () => {
               />
             </div>
 
-            <Link to="/user/dashboard" className="text-white hover:underline">
+            <button
+              type="button"
+              onClick={handleNavigate}
+              className="text-white hover:underline"
+            >
               {user?.fullName}
-            </Link>
+            </button>
 
             <button
               onClick={handleLogout}

@@ -36,7 +36,7 @@ const PasswordChangeModal = ({ open, onClose }) => {
         setIsLoading(false);
         return;
       }
-      const res = await api.patch("/common/change-password", formData);
+      const res = await api.patch("/user/change-password", formData);
       toast.success("Password changed successfully!");
       handleCloseModal();
     } catch (error) {

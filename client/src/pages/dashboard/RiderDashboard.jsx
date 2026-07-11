@@ -7,7 +7,9 @@ import RiderOrders from "../../components/riderDashboard/RiderOrders";
 import RiderSetting from "../../components/riderDashboard/RiderSettings";
 
 const RiderDashboard = () => {
-  const { isLogin, role } = useAuth();
+  const auth = useAuth();
+  const isLogin = auth?.isLogin ?? false;
+  const role = auth?.role ?? null;
   const navigate = useNavigate();
   const active = useLocation().state?.activeTab;
   const [activeTab, setActiveTab] = React.useState(active || "overview");

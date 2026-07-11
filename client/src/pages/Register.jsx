@@ -1,39 +1,79 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import heroImage from "../images/bgImage1-BgVBBcls.jpg";
 import api from "../config/api.config";
+import toast from "react-hot-toast";
 
 function Register() {
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [gender, setGender] = useState("male");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [dob, setDob] = useState("");
-  const [role, setRole] = useState("customer");
+  const { userType: paramUserType } = useParams();
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    userType: paramUserType || "customer",
+    fullName: "",
+    email: "",
+    phone: "",
+    gender: "",
+    dob: "",
+    password: "",
+    confirmPassword: "",
+    agreeTerms: false,
+  });
+
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const validateForm = (data) => {
+    const newErrors = {};
+
+    if (!data.fullName.trim()) newErrors.fullName = "Full name is required";
+    if (!data.email.trim()) newErrors.email = "Email is required";
+    if (!data.phone.trim()) newErrors.phone = "Phone number is required";
+    if (!data.gender) newErrors.gender = "Gender is required";
+    if (!data.dob) newErrors.dob = "Date of birth is required";
+    if (!data.password || data.password.length < 6)
+      newErrors.password = "Password must be at least 6 characters";
+    if (!data.confirmPassword)
+      newErrors.confirmPassword = "Please confirm your password";
+    if (data.password !== data.confirmPassword)
+      newErrors.confirmPassword = "Passwords do not match";
+    if (!data.agreeTerms)
+      newErrors.agreeTerms = "You must agree to terms and conditions";
+
+    return newErrors;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors({});
+    setLoading(true);
+    const validationErrors = validateForm(formData);
 
-    const payload = {
-      role,
-      fullName,
-      email,
-      phone: phoneNumber,
-      gender,
-      password,
-      "confirm password": confirmPassword,
-      dob,
-      page: "register",
-      action: "sign_up",
-    };
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      setLoading(false);
+      return;
+    }
 
     try {
-      const res = await api.post("/auth/register", payload);
-      alert(res.data.message);
+      const res = await api.post("/auth/register", {
+        ...formData,
+        email: formData.email.toLowerCase(),
+      });
+      toast.success(res.data.message || "Account created successfully");
+      navigate("/login");
     } catch (error) {
-      console.log(res?.data?.message || error.message);
+      toast.error(error.response?.data?.message || error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -47,7 +87,7 @@ function Register() {
       <div className="relative z-10 w-full max-w-md">
         <form
           onSubmit={handleSubmit}
-          className="bg-(--background) rounded-xl shadow-lg p-8 flex flex-col gap-4"
+          className="bg-white rounded-xl shadow-lg p-8 flex flex-col gap-4"
         >
           <h2 className="text-3xl font-bold text-center">Create Account</h2>
 
@@ -55,69 +95,115 @@ function Register() {
             Join us as a Customer, Restaurant, or Rider
           </p>
 
-          <input
-            type="text"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            placeholder="Enter your full name"
-            className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-          />
-
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-            className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-          />
-
-          <input
-            type="text"
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-            placeholder="Enter your phone number"
-            className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-          />
-
+          {/* User Type Selection */}
           <div>
+            <label className="font-semibold text-sm block mb-1">Register As</label>
             <select
-              value={gender}
-              onChange={(e) => setGender(e.target.value)}
+              name="userType"
+              value={formData.userType}
+              onChange={handleInputChange}
               className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
             >
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
+              <option value="customer">Customer</option>
+              <option value="restaurant">Restaurant</option>
+              <option value="rider">Rider</option>
             </select>
           </div>
 
           <div>
             <input
-              type="date"
-              value={dob}
-              onChange={(e) => setDob(e.target.value)}
+              type="text"
+              name="fullName"
+              value={formData.fullName}
+              onChange={handleInputChange}
+              placeholder="Enter your full name"
               className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
+            {errors.fullName && <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>}
           </div>
 
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
-            className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-          />
+          <div>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              placeholder="Enter your email"
+              className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+          </div>
 
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="Confirm your password"
-            className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-          />
+          <div>
+            <input
+              type="text"
+              name="phone"
+              value={formData.phone}
+              onChange={handleInputChange}
+              placeholder="Enter your phone number"
+              className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+            {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
+          </div>
+
+          <div>
+            <select
+              name="gender"
+              value={formData.gender}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            >
+              <option value="">Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+            {errors.gender && <p className="text-red-500 text-xs mt-1">{errors.gender}</p>}
+          </div>
+
+          <div>
+            <input
+              type="date"
+              name="dob"
+              value={formData.dob}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+            {errors.dob && <p className="text-red-500 text-xs mt-1">{errors.dob}</p>}
+          </div>
+
+          <div>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              placeholder="Enter your password"
+              className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
+          </div>
+
+          <div>
+            <input
+              type="password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
+              placeholder="Confirm your password"
+              className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+            {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
+          </div>
 
           <label className="flex items-start gap-2 text-sm">
-            <input type="checkbox" className="mt-1" />
+            <input
+              type="checkbox"
+              name="agreeTerms"
+              checked={formData.agreeTerms}
+              onChange={handleInputChange}
+              className="mt-1"
+            />
             <span>
               I agree to the{" "}
               <a href="#" className="text-orange-500 hover:text-orange-600">
@@ -125,12 +211,14 @@ function Register() {
               </a>
             </span>
           </label>
+          {errors.agreeTerms && <p className="text-red-500 text-xs">{errors.agreeTerms}</p>}
 
           <button
             type="submit"
-            className="w-full py-3 bg-orange-500 text--(primary-text) font-semibold rounded-lg hover:bg-orange-600 transition"
+            disabled={loading}
+            className="w-full py-3 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 transition disabled:opacity-70"
           >
-            Register
+            {loading ? "Creating Account..." : "Register"}
           </button>
 
           <p className="text-center text-sm">

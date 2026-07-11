@@ -1,31 +1,43 @@
 import React, { useState } from "react";
 import contactImage from "../images/contactPage.jpg";
-
+import api from "../config/api.config";
+import toast from "react-hot-toast";
 
 const Contact_Us = () => {
   const [formData, setFormData] = useState({
-    name: "",
+    fullName: "",
     email: "",
     phone: "",
     subject: "",
     message: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    const payload = {
-      ...formData,
-      page: "contact",
-      action: "contact_form",
-    };
-
-    console.log("Contact payload ready for backend:", payload);
+    try {
+      const res = await api.post("/public/contact-us", formData);
+      toast.success(res.data.message || "Thanks for contacting us!");
+      setFormData({
+        fullName: "",
+        email: "",
+        phone: "",
+        subject: "",
+        message: "",
+      });
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -72,10 +84,10 @@ const Contact_Us = () => {
             <div className="grid md:grid-cols-2 gap-4">
               <input
                 type="text"
-                name="name"
-                value={formData.name}
+                name="fullName"
+                value={formData.fullName}
                 onChange={handleChange}
-                placeholder="Your name"
+                placeholder="Your full name"
                 className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                 required
               />
@@ -97,6 +109,7 @@ const Contact_Us = () => {
               onChange={handleChange}
               placeholder="Phone number"
               className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              required
             />
 
             <input
@@ -121,9 +134,10 @@ const Contact_Us = () => {
 
             <button
               type="submit"
-              className="w-full bg-orange-600 text-white py-3 rounded-lg font-semibold hover:bg-orange-700 transition-colors"
+              disabled={loading}
+              className="w-full bg-orange-600 text-white py-3 rounded-lg font-semibold hover:bg-orange-700 transition-colors disabled:opacity-70"
             >
-              Send Message
+              {loading ? "Sending..." : "Send Message"}
             </button>
           </form>
         </div>

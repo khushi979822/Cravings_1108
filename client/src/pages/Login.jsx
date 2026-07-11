@@ -6,49 +6,76 @@ import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 
 function Login() {
-  const { setUser, setIsLogin } = useAuth();
+  const { setUser, setIsLogin, setRole } = useAuth();
   const navigate = useNavigate();
 
-  const [loginData, setLoginData] = useState({
+  const [formData, setFormData] = useState({
     email: "",
     password: "",
+    rememberMe: false,
   });
 
-  const handleChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-    setLoginData((prevData) => ({
-      ...prevData,
-      [name]: value,
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
     }));
+  };
+
+  const validateForm = (data) => {
+    const newErrors = {};
+
+    if (!data.email.trim()) newErrors.email = "Email is required";
+    if (!data.password) newErrors.password = "Password is required";
+
+    return newErrors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const validationErrors = validateForm(formData);
 
-    const payload = {
-      email: loginData.email.toLowerCase(),
-      password: loginData.password,
-    };
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setLoading(true);
 
     try {
-      const res = await api.post("/auth/login", payload);
+      const res = await api.post("/auth/login", {
+        email: formData.email.toLowerCase(),
+        password: formData.password,
+      });
 
       toast.success(res.data.message);
-
-      sessionStorage.setItem("UserData", JSON.stringify(res.data.data));
-
+      sessionStorage.setItem("cravingUser", JSON.stringify(res.data.data));
       setUser(res.data.data);
       setIsLogin(true);
+      setRole(res.data.data.userType);
 
-      navigate("/user/dashboard");
+      if (res.data.data.userType === "restaurant") {
+        navigate("/restaurant-dashboard");
+      } else if (res.data.data.userType === "rider") {
+        navigate("/rider-dashboard");
+      } else if (res.data.data.userType === "admin") {
+        navigate("/admin-dashboard");
+      } else {
+        navigate("/customer-dashboard");
+      }
     } catch (error) {
       toast.error(
         error.response?.status +
           " | " +
           (error.response?.data?.message || error.message),
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -72,37 +99,46 @@ function Login() {
 
           <label className="font-semibold">Email</label>
 
-          <input
-            type="email"
-            name="email"
-            value={loginData.email}
-            onChange={handleChange}
-            placeholder="Enter your email"
-            className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-            required
-          />
+          <div>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              placeholder="Enter your email"
+              className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+          </div>
 
           <label className="font-semibold">Password</label>
 
           <div className="relative">
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
-              value={loginData.password}
-              onChange={handleChange}
+              value={formData.password}
+              onChange={handleInputChange}
               placeholder="Enter your password"
               className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-              required
             />
-
-            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer">
-              👁️
+            <span
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
+              onClick={() => setShowPassword((prev) => !prev)}
+            >
+              {showPassword ? "🙈" : "👁️"}
             </span>
+            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
           </div>
 
           <div className="flex justify-between items-center text-sm">
             <label className="flex items-center gap-2">
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                name="rememberMe"
+                checked={formData.rememberMe}
+                onChange={handleInputChange}
+              />
               Remember
             </label>
 
@@ -113,9 +149,10 @@ function Login() {
 
           <button
             type="submit"
-            className="w-full py-3 bg-orange-700 text-white font-semibold rounded-lg hover:bg-orange-600 transition"
+            disabled={loading}
+            className="w-full py-3 bg-orange-700 text-white font-semibold rounded-lg hover:bg-orange-600 transition disabled:opacity-70"
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
 
           <div className="flex items-center gap-3">
