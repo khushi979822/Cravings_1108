@@ -4,7 +4,7 @@ import {
   deleteMultipleImages,
   UploadSingleImage,
   deleteSingleImage,
-} from "../utils/imageUpload.service.js";
+} from "../utils/image.service.js";
 
 export const restaurantUpdateProfile = async (req, res, next) => {
   try {
@@ -87,6 +87,6 @@ export const restaurantUpdateProfile = async (req, res, next) => {
     }
   } catch (error) {
     console.log(error.message);
-    next();
+    next(error);
   }
 };

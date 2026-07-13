@@ -17,7 +17,7 @@ export const genToken = async (user, res) => {
 
     console.log(token);
   } catch (error) {
-    throw next(error);
+    throw error;
   }
 };
 
@@ -38,6 +38,6 @@ export const genOTPToken = async (user, res) => {
 
     console.log(token);
   } catch (error) {
-    throw next(error);
+    throw error;
   }
 };

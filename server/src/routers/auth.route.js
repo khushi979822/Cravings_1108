@@ -6,8 +6,8 @@ import {
   SendOtp,
   VerifyOtp,
   ResetPassword,
-} from "../controller/auth.controller.js";
-import { OTPAuthProtect } from "../middleware/auth.middelware.js";
+} from "../controllers/auth.controller.js";
+import { OTPAuthProtect } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
