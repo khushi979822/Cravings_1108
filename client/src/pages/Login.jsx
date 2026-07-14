@@ -72,7 +72,8 @@ function Login() {
       toast.error(
         error.response?.status +
           " | " +
-          (error.response?.data?.message || error.message),
+          (error.response?.data?.message ||
+            "Unknown error occurred during Login. Please try again."),
       );
     } finally {
       setLoading(false);
@@ -108,7 +109,9 @@ function Login() {
               placeholder="Enter your email"
               className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
-            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+            {errors.email && (
+              <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+            )}
           </div>
 
           <label className="font-semibold">Password</label>
@@ -128,7 +131,9 @@ function Login() {
             >
               {showPassword ? "🙈" : "👁️"}
             </span>
-            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
+            {errors.password && (
+              <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+            )}
           </div>
 
           <div className="flex justify-between items-center text-sm">
