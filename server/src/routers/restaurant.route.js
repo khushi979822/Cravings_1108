@@ -3,8 +3,8 @@ import multer from "multer";
 import {
   RestaurantUpdateProfile,
   RestaurantGetData,
-} from "../controller/restaurant.controller.js";
-import { RestaurantAuthProtect } from "../middleware/auth.middelware.js";
+} from "../controllers/restaurant.controller.js";
+import { RestaurantAuthProtect } from "../middleware/auth.middleware.js";
 
 const upload = multer();
 const router = express.Router();
