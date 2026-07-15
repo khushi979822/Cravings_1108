@@ -3,16 +3,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import RestaurantSidebar from "../../components/restaurantDashboard/RestaurantSidebar";
 import RestaurantOverview from "../../components/restaurantDashboard/RestaurantOverview";
-import RestaurantSetting from "../../components/restaurantDashboard/RestaurantSettings";
+import RestaurantSetting from "../../components/restaurantDashboard/RestaurantSetting";
 import RestaurantOrders from "../../components/restaurantDashboard/RestaurantOrders";
 
 const RestaurantDashboard = () => {
-  const auth = useAuth();
-  const isLogin = auth?.isLogin ?? false;
-  const role = auth?.role ?? null;
+  const { isLogin, role } = useAuth();
   const navigate = useNavigate();
   const active = useLocation().state?.activeTab;
-  const [activeTab, setActiveTab] = React.useState(active || "overview");
+  const [activeTab, setActiveTab] = React.useState(active || "settings");
 
   if (!isLogin || role !== "restaurant") {
     return (
@@ -35,7 +33,7 @@ const RestaurantDashboard = () => {
 
   return (
     <>
-      <div className="h-[92vh] flex gap-2 m-2">
+      <div className="h-[91vh] flex gap-2 p-2">
         <div className="w-3/17 bg-(--color-base-200) p-4 rounded-lg shadow-md h-full">
           <RestaurantSidebar
             activeTab={activeTab}
