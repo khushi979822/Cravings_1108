@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import RestaurantSidebar from "../../components/restaurantDashboard/RestaurantSidebar";
 import RestaurantOverview from "../../components/restaurantDashboard/RestaurantOverview";
-import RestaurantSetting from "../../components/restaurantDashboard/RestaurantSetting";
+import RestaurantSetting from "../../components/restaurantDashboard/RestaurantSettings";
 import RestaurantOrders from "../../components/restaurantDashboard/RestaurantOrders";
 
 const RestaurantDashboard = () => {

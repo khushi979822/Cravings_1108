@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { MdEdit } from "react-icons/md";
 import { useAuth } from "../../../context/AuthContext";
-import api from "../../../config/ApiConfig";
+import api from "../../../config/api.config";
 import toast from "react-hot-toast";
 import { MdOutlineAddAPhoto, MdOutlineLockReset } from "react-icons/md";
 import PasswordChangeModal from "../../commonModals/PasswordChangeModal";
@@ -38,6 +38,12 @@ const ResturantCoreDetails = () => {
     geoLat: restaurantData?.geoLocation?.lat || "",
     geoLon: restaurantData?.geoLocation?.lon || "",
     socialMediaLinks: restaurantData?.socialMediaLinks || [],
+    bankName: restaurantData?.bankDetails?.bankName || "",
+    accountNumber: restaurantData?.bankDetails?.accountNumber || "",
+    ifscCode: restaurantData?.bankDetails?.ifscCode || "",
+    panCard: restaurantData?.documents?.panCard || "",
+    gst: restaurantData?.documents?.gst || "",
+    fssai: restaurantData?.documents?.fssai || "",
   });
 
   const handleRestaurantChange = (e) => {
@@ -108,6 +114,12 @@ const ResturantCoreDetails = () => {
       geoLat: restaurantData?.geoLocation?.lat || "",
       geoLon: restaurantData?.geoLocation?.lon || "",
       socialMediaLinks: restaurantData?.socialMediaLinks || [],
+      bankName: restaurantData?.bankDetails?.bankName || "",
+      accountNumber: restaurantData?.bankDetails?.accountNumber || "",
+      ifscCode: restaurantData?.bankDetails?.ifscCode || "",
+      panCard: restaurantData?.documents?.panCard || "",
+      gst: restaurantData?.documents?.gst || "",
+      fssai: restaurantData?.documents?.fssai || "",
     });
     setEditingRestaurant(false);
   };
@@ -322,12 +334,12 @@ const ResturantCoreDetails = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-2 justify-center items-center">
-                  <div className="w-full">
+                <div className="w-full">
                     <label className="text-xs font-semibold">Bank Name</label>
                     <input
                       type="text"
                       name="bankName"
-                      value={restaurantFormData?.address || ""}
+                      value={restaurantFormData?.bankName || ""}
                       onChange={handleRestaurantChange}
                       className={`w-full px-1.5 py-1 border border-(--color-secondary) ${editingRestaurant ? "bg-white" : "bg-(--color-base-100)"} rounded`}
                       disabled={!editingRestaurant}
@@ -340,7 +352,7 @@ const ResturantCoreDetails = () => {
                     <input
                       type="text"
                       name="accountNumber"
-                      value={restaurantFormData?.city || ""}
+                      value={restaurantFormData?.accountNumber || ""}
                       onChange={handleRestaurantChange}
                       className={`w-full px-1.5 py-1 border border-(--color-secondary) ${editingRestaurant ? "bg-white" : "bg-(--color-base-100)"} rounded`}
                       disabled={!editingRestaurant}
@@ -351,7 +363,7 @@ const ResturantCoreDetails = () => {
                     <input
                       type="text"
                       name="ifscCode"
-                      value={restaurantFormData?.state || ""}
+                      value={restaurantFormData?.ifscCode || ""}
                       onChange={handleRestaurantChange}
                       className={`w-full px-1.5 py-1 border border-(--color-secondary) ${editingRestaurant ? "bg-white" : "bg-(--color-base-100)"} rounded`}
                       disabled={!editingRestaurant}
@@ -364,7 +376,7 @@ const ResturantCoreDetails = () => {
                     <input
                       type="text"
                       name="panCard"
-                      value={restaurantFormData?.pinCode || ""}
+                      value={restaurantFormData?.panCard || ""}
                       onChange={handleRestaurantChange}
                       className={`w-full px-1.5 py-1 border border-(--color-secondary) ${editingRestaurant ? "bg-white" : "bg-(--color-base-100)"} rounded`}
                       disabled={!editingRestaurant}
@@ -375,7 +387,7 @@ const ResturantCoreDetails = () => {
                     <input
                       type="text"
                       name="gst"
-                      value={restaurantFormData?.country || ""}
+                      value={restaurantFormData?.gst || ""}
                       onChange={handleRestaurantChange}
                       className={`w-full px-1.5 py-1 border border-(--color-secondary) ${editingRestaurant ? "bg-white" : "bg-(--color-base-100)"} rounded`}
                       disabled={!editingRestaurant}
@@ -383,11 +395,11 @@ const ResturantCoreDetails = () => {
                   </div>
 
                   <div className="w-full">
-                    <label className="text-xs font-semibold">fssai Code</label>
+                    <label className="text-xs font-semibold">FSSAI Code</label>
                     <input
                       type="text"
                       name="fssai"
-                      value={restaurantFormData?.country || ""}
+                      value={restaurantFormData?.fssai || ""}
                       onChange={handleRestaurantChange}
                       className={`w-full px-1.5 py-1 border border-(--color-secondary) ${editingRestaurant ? "bg-white" : "bg-(--color-base-100)"} rounded`}
                       disabled={!editingRestaurant}

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import RestaurantInformation from "./settings/RestaurantInformation";
-import ResturantCoreDetails from "./settings/ResturantCoreDetails";
+import ResturantCoreDetails from "./settings/RestaurantCoreDetails";
 import RestaurantPhotos from "./settings/RestaurantPhotos";
 
 const RestaurantSetting = () => {
@@ -18,7 +18,6 @@ const RestaurantSetting = () => {
         <div className="border-b border-(--color-secondary)/50 flex justify-between mb-2 w-full">
           <div className="flex gap-3 ">
             {Tabs.map((tab, idx) => (
-              <>
                 <div
                   key={idx}
                   className={`p-2 uppercase cursor-pointer ${activeTab === tab.id ? "text-(--color-primary) border-b-3 border-(--color-primary)" : ""}`}
@@ -26,7 +25,6 @@ const RestaurantSetting = () => {
                 >
                   {tab.label}
                 </div>
-              </>
             ))}
           </div>
 

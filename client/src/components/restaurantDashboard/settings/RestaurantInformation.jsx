@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { MdEdit } from "react-icons/md";
 import { useAuth } from "../../../context/AuthContext";
-import api from "../../../config/ApiConfig";
+import api from "../../../config/api.config";
 import toast from "react-hot-toast";
 import { MdOutlineAddAPhoto, MdOutlineLockReset } from "react-icons/md";
 import PasswordChangeModal from "../../commonModals/PasswordChangeModal";
@@ -87,6 +87,8 @@ const RestaurantInformation = () => {
     contactPhone: restaurantData?.contactDetails?.phone || "",
     openingTime: restaurantData?.servingHours?.openingTime || "",
     closingTime: restaurantData?.servingHours?.closingTime || "",
+    legalName: restaurantData?.legalName || "",
+    companyType: restaurantData?.companyType || "",
   });
 
   const handleRestaurantChange = (e) => {
@@ -115,7 +117,6 @@ const RestaurantInformation = () => {
   const handleCancelRestaurant = () => {
     setRestaurantFormData({
       restaurantName: restaurantData?.restaurantName || "",
-
       description: restaurantData?.description || "",
       restaurantType: restaurantData?.restaurantType || "",
       cuisineTypes: restaurantData?.cuisineTypes?.join(", ") || "",
@@ -124,6 +125,8 @@ const RestaurantInformation = () => {
       contactPhone: restaurantData?.contactDetails?.phone || "",
       openingTime: restaurantData?.servingHours?.openingTime || "",
       closingTime: restaurantData?.servingHours?.closingTime || "",
+      legalName: restaurantData?.legalName || "",
+      companyType: restaurantData?.companyType || "",
     });
     setEditingRestaurant(false);
   };
@@ -162,7 +165,7 @@ const RestaurantInformation = () => {
           <div className="relative">
             <div className="w-26 h-26">
               <img
-                src={profilePicPreview || user.photo.url}
+                src={profilePicPreview || user?.photo?.url}
                 alt="Profile"
                 className="w-full h-full rounded-xl object-cover border-2 border-(--color-primary)"
               />
@@ -477,9 +480,9 @@ const RestaurantInformation = () => {
             <div className="w-full">
               <label className="text-xs font-semibold">Legal Name</label>
               <input
-                type="tel"
+                type="text"
                 name="legalName"
-                value={restaurantFormData?.contactPhone || ""}
+                value={restaurantFormData?.legalName || ""}
                 onChange={handleRestaurantChange}
                 className={`w-full px-1.5 py-1 border border-(--color-secondary) ${editingRestaurant ? "bg-white" : "bg-(--color-base-100)"} rounded`}
                 disabled={!editingRestaurant}
@@ -488,9 +491,9 @@ const RestaurantInformation = () => {
             <div className="w-full">
               <label className="text-xs font-semibold">Company Type</label>
               <input
-                type="tel"
+                type="text"
                 name="companyType"
-                value={restaurantFormData?.contactPhone || ""}
+                value={restaurantFormData?.companyType || ""}
                 onChange={handleRestaurantChange}
                 className={`w-full px-1.5 py-1 border border-(--color-secondary) ${editingRestaurant ? "bg-white" : "bg-(--color-base-100)"} rounded`}
                 disabled={!editingRestaurant}
