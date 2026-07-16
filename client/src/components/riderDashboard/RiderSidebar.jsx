@@ -1,17 +1,16 @@
 import React from "react";
 import { MdDashboard } from "react-icons/md";
-import { FaShoppingCart } from "react-icons/fa";
-import { MdFavoriteBorder } from "react-icons/md";
+import { FaHistory } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 
 const RiderSidebar = ({ activeTab, setActiveTab }) => {
   const mainTabs = [
-    { name: "Overview", value: "overview", icon: <MdDashboard /> },
-    { name: "Orders", value: "orders", icon: <FaShoppingCart /> },
+    { name: "Dashboard", value: "overview", icon: <MdDashboard /> },
+    { name: "Delivery History", value: "orders", icon: <FaHistory /> },
   ];
 
   const settingsTab = {
-    name: "Settings",
+    name: "Profile & Vehicle",
     value: "settings",
     icon: <IoMdSettings />,
   };
@@ -19,10 +18,10 @@ const RiderSidebar = ({ activeTab, setActiveTab }) => {
   const renderTab = (tab) => (
     <li
       key={tab.value}
-      className={`cursor-pointer p-2 rounded text-(--color-neutral) flex items-center gap-3 ${
+      className={`cursor-pointer p-2.5 rounded-lg text-(--color-base-content) flex items-center gap-3 transition-all ${
         activeTab === tab.value
-          ? "bg-(--color-primary) text-(--color-primary-content) font-semibold"
-          : "hover:bg-(--color-secondary) hover:text-(--color-secondary-content) transition-colors duration-200"
+          ? "bg-(--color-primary) text-(--color-primary-content) font-semibold shadow-sm"
+          : "hover:bg-(--color-base-300) hover:text-orange-700 font-medium"
       }`}
       onClick={() => setActiveTab(tab.value)}
     >
@@ -31,16 +30,20 @@ const RiderSidebar = ({ activeTab, setActiveTab }) => {
   );
 
   return (
-    <>
-      <div className="h-full flex flex-col">
-        <ul className="space-y-4 flex-1">
+    <div className="h-full flex flex-col justify-between">
+      <div>
+        <div className="mb-6 px-2 py-1">
+          <h2 className="text-xl font-bold text-(--color-primary)">Cravings</h2>
+          <p className="text-xs text-(--color-secondary)">Rider Console</p>
+        </div>
+        <ul className="space-y-2 flex-1">
           {mainTabs.map((tab) => renderTab(tab))}
         </ul>
-        <ul className="space-y-4 border-t border-(--color-secondary) py-2">
-          {renderTab(settingsTab)}
-        </ul>
       </div>
-    </>
+      <ul className="space-y-2 border-t border-(--color-base-300) pt-4">
+        {renderTab(settingsTab)}
+      </ul>
+    </div>
   );
 };
 

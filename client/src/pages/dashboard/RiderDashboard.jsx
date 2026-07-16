@@ -22,7 +22,7 @@ const RiderDashboard = () => {
             Access Denied. Please log in as a Rider to view this page.
           </h1>
           <button
-            className="mt-4 px-4 py-2 bg-(--color-primary) text-white rounded-md"
+            className="mt-4 px-4 py-2 bg-(--color-primary) text-white rounded-md font-semibold hover:opacity-90 transition"
             onClick={() => navigate("/login")}
           >
             Go to Login
@@ -33,19 +33,20 @@ const RiderDashboard = () => {
   }
 
   return (
-    <>
-      <div className="h-[92vh] flex gap-2 m-2">
-        <div className="w-3/17 bg-(--color-base-200) p-4 rounded-lg shadow-md h-full">
-          <RiderSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-        </div>
-        <div className="w-14/17 bg-(--color-base-100) p-4 rounded-lg shadow-md h-full">
-          {activeTab === "overview" && <RiderOverview />}
-          {activeTab === "orders" && <RiderOrders />}
-          {activeTab === "settings" && <RiderSetting />}
-        </div>
+    <div className="min-h-[92vh] flex gap-4 p-4 bg-(--color-base-100)">
+      <div className="w-1/5 bg-white p-4 rounded-xl shadow-sm border border-(--color-base-300) min-h-[85vh]">
+        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
       </div>
-    </>
+      <div className="w-4/5 bg-white p-6 rounded-xl shadow-sm border border-(--color-base-300) min-h-[85vh]">
+        {activeTab === "overview" && <RiderOverview />}
+        {activeTab === "orders" && <RiderOrders />}
+        {activeTab === "settings" && <RiderSetting />}
+      </div>
+    </div>
   );
 };
+
+// Map Sidebar to local RiderSidebar
+const Sidebar = RiderSidebar;
 
 export default RiderDashboard;

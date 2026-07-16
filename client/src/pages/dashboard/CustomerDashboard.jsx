@@ -3,6 +3,8 @@ import Sidebar from "../../components/customerDashboard/CustomerSidebar";
 import CustomerOverview from "../../components/customerDashboard/CustomerOverview";
 import CustomerOrders from "../../components/customerDashboard/CustomerOrders";
 import CustomerSetting from "../../components/customerDashboard/CustomerSettings";
+import WishList from "../../components/customerDashboard/WishList";
+import AddressBook from "../../components/customerDashboard/AddressBook";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
@@ -22,7 +24,7 @@ const CustomerDashboard = () => {
             Access Denied. Please log in as a customer to view this page.
           </h1>
           <button
-            className="mt-4 px-4 py-2 bg-(--color-primary) text-white rounded-md"
+            className="mt-4 px-4 py-2 bg-(--color-primary) text-white rounded-md font-semibold hover:opacity-90 transition"
             onClick={() => navigate("/login")}
           >
             Go to Login
@@ -33,18 +35,18 @@ const CustomerDashboard = () => {
   }
 
   return (
-    <>
-      <div className="h-[92vh] flex gap-2 m-2">
-        <div className="w-3/17 bg-(--color-base-200) p-4 rounded-lg shadow-md h-full">
-          <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-        </div>
-        <div className="w-14/17 bg-(--color-base-100) p-4 rounded-lg shadow-md h-full">
-          {activeTab === "overview" && <CustomerOverview />}
-          {activeTab === "orders" && <CustomerOrders />}
-          {activeTab === "settings" && <CustomerSetting />}
-        </div>
+    <div className="min-h-[92vh] flex gap-4 p-4 bg-(--color-base-100)">
+      <div className="w-1/5 bg-white p-4 rounded-xl shadow-sm border border-(--color-base-300) min-h-[85vh]">
+        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
       </div>
-    </>
+      <div className="w-4/5 bg-white p-6 rounded-xl shadow-sm border border-(--color-base-300) min-h-[85vh]">
+        {activeTab === "overview" && <CustomerOverview />}
+        {activeTab === "orders" && <CustomerOrders />}
+        {activeTab === "favourites" && <WishList />}
+        {activeTab === "addresses" && <AddressBook />}
+        {activeTab === "settings" && <CustomerSetting />}
+      </div>
+    </div>
   );
 };
 

@@ -7,6 +7,11 @@ const CustomerSchema = mongoose.Schema(
       ref: "user",
       required: true,
     },
+    favourites: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+      }
+    ],
     addressBook: {
       type: [
         {
