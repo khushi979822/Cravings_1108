@@ -101,3 +101,14 @@ After successful login, a secure Oreo cookie is generated and used for all authe
 
 Each role has its own protected APIs and permissions.
 
+---
+
+📂 API Modules
+Module	Description
+Auth	Registration, Login, Password Reset
+Public	Public APIs without authentication
+Common	Shared APIs for logged-in users
+Restaurant	Restaurant profile, menu, orders, earnings
+Customer	Orders, Cart, Favorites, Address Book
+Rider	Delivery Management
+Admin	Platform Management & Analytics
