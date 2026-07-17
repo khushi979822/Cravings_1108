@@ -86,3 +86,18 @@ src/
 - Restaurant Listing
 
 ---
+
+🔐 Authentication
+
+The project uses Cookie-based JWT Authentication.
+
+After successful login, a secure Oreo cookie is generated and used for all authenticated API requests.
+
+👥 User Roles
+👤 Customer
+🍽️ Restaurant
+🛵 Rider
+🛡️ Admin
+
+Each role has its own protected APIs and permissions.
+
