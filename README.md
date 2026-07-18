@@ -112,3 +112,19 @@ Restaurant	Restaurant profile, menu, orders, earnings
 Customer	Orders, Cart, Favorites, Address Book
 Rider	Delivery Management
 Admin	Platform Management & Analytics
+
+---
+
+📖 API Documentation
+
+The project contains 76 REST APIs categorized into seven modules.
+
+Each API includes:
+
+Endpoint
+HTTP Method
+Authentication Requirement
+Request Body
+Response Format
+Success Status Codes
+Error Responses
