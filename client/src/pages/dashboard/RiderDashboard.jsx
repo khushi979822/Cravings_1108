@@ -35,7 +35,7 @@ const RiderDashboard = () => {
   return (
     <div className="min-h-[92vh] flex gap-4 p-4 bg-(--color-base-100)">
       <div className="w-1/5 bg-white p-4 rounded-xl shadow-sm border border-(--color-base-300) min-h-[85vh]">
-        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+        <RiderSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
       </div>
       <div className="w-4/5 bg-white p-6 rounded-xl shadow-sm border border-(--color-base-300) min-h-[85vh]">
         {activeTab === "overview" && <RiderOverview />}
@@ -45,8 +45,5 @@ const RiderDashboard = () => {
     </div>
   );
 };
-
-// Map Sidebar to local RiderSidebar
-const Sidebar = RiderSidebar;
 
 export default RiderDashboard;

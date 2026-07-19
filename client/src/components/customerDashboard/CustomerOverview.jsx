@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "../../config/api.config";
 import toast from "react-hot-toast";
 import { LoadingSpinner, StatCard, StatusBadge } from "../common/DashboardShared";
-import { MdShoppingCart, MdDoneAll, MdOutlineClose, MdAttachMoney } from "react-icons/md";
+import { MdShoppingCart, MdDoneAll, MdOutlineClose } from "react-icons/md";
 
 const CustomerOverview = () => {
   const [stats, setStats] = useState(null);

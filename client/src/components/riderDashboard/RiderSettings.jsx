@@ -16,7 +16,6 @@ const RiderSetting = () => {
     useState(false);
 
   // Rider extra details profile state
-  const [riderProfile, setRiderProfile] = useState(null);
   const [loadingRider, setLoadingRider] = useState(true);
 
   const [formData, setFormData] = useState({
@@ -40,15 +39,7 @@ const RiderSetting = () => {
     try {
       const res = await api.get("/rider/dashboard");
       const riderData = res.data.data;
-      
-      // Get the profile data
-      const profileRes = await api.get("/rider/current-order"); // fallback call to load location or endpoints
-      // Alternatively patch endpoint
-      
-      // Let's populate formData from stats returned by /rider/dashboard
-      // Let's call update profile api to retrieve detail
-      const profileDetails = await api.get("/rider/earnings"); // fallback loading data
-      
+
       setFormData(prev => ({
         ...prev,
         vehicleType: riderData.vehicleDetails?.vehicleType || "Bike",
