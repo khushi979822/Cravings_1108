@@ -12,7 +12,7 @@ import {
   deleteCustomerAddress,
   getCustomerFavourites,
   addCustomerFavourite,
-  deleteCustomerFavourite
+  deleteCustomerFavourite,
 } from "../controllers/customer.controller.js";
 import { AuthProtect } from "../middleware/auth.middleware.js";
 
