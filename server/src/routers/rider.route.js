@@ -10,7 +10,7 @@ import {
   getRiderDeliveryHistory,
   getRiderEarnings,
   updateRiderLocation,
-  updateRiderProfile
+  updateRiderProfile,
 } from "../controllers/rider.controller.js";
 import { AuthProtect } from "../middleware/auth.middleware.js";
 
