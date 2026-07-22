@@ -3,8 +3,11 @@ import multer from "multer";
 import {
   RestaurantUpdateProfile,
   RestaurantGetData,
-} from "../controllers/restaurant.controller.js";
-import { RestaurantAuthProtect } from "../middleware/auth.middleware.js";
+  RestaurantUpdateInfo,
+  OpenRestaurant,
+  RestaurantUpdateLegalInfo,
+} from "../controller/restaurant.controller.js";
+import { RestaurantAuthProtect } from "../middleware/auth.middelware.js";
 
 const upload = multer();
 const router = express.Router();
@@ -18,5 +21,23 @@ router.post(
 );
 
 router.get("/get-resturant-data", RestaurantAuthProtect, RestaurantGetData);
+
+router.put(
+  "/update-restaurant-info",
+  RestaurantAuthProtect,
+  RestaurantUpdateInfo,
+);
+
+router.patch(
+  "/change-open-status/:openStatus",
+  RestaurantAuthProtect,
+  OpenRestaurant,
+);
+
+router.put(
+  "/update-legal-info",
+  RestaurantAuthProtect,
+  RestaurantUpdateLegalInfo,
+);
 
 export default router;
