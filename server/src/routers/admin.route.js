@@ -27,7 +27,7 @@ import {
   createAdminCoupon,
   updateAdminCoupon,
   deleteAdminCoupon,
-  getAdminReports
+  getAdminReports,
 } from "../controllers/admin.controller.js";
 import { AuthProtect } from "../middleware/auth.middleware.js";
 
