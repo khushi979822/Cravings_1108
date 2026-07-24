@@ -3,11 +3,13 @@ import { MdDashboard } from "react-icons/md";
 import { FaShoppingCart } from "react-icons/fa";
 import { MdFavoriteBorder } from "react-icons/md";
 import { IoMdSettings } from "react-icons/io";
+import { BiSolidDish } from "react-icons/bi";
 
 const RestaurantSidebar = ({ activeTab, setActiveTab }) => {
   const mainTabs = [
     { name: "Overview", value: "overview", icon: <MdDashboard /> },
     { name: "Orders", value: "orders", icon: <FaShoppingCart /> },
+    { name: "Menu", value: "menu", icon: <BiSolidDish /> },
   ];
 
   const settingsTab = {
