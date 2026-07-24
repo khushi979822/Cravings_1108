@@ -86,9 +86,11 @@ const Navbar = () => {
 
             <button
               onClick={handleLogout}
-              className="text-red-300 hover:text-red-600 text-xl"
+              className="group flex items-center gap-1.5 border border-red-300 text-red-300 px-3 py-1.5 rounded-full text-sm font-medium hover:bg-red-500 hover:border-red-500 hover:text-white transition-all duration-200 hover:scale-105 active:scale-95"
+              title="Logout"
             >
-              <AiOutlineLogout />
+              <AiOutlineLogout className="text-base group-hover:rotate-12 transition-transform duration-200" />
+              <span>Logout</span>
             </button>
           </div>
         ) : (
