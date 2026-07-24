@@ -5,6 +5,7 @@ import { LuPencilLine, LuTrash2, LuEye, LuChevronDown } from "react-icons/lu";
 import { AiTwotoneLike } from "react-icons/ai";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import ConfirmModal from "./menuItems/ConfirmModal";
+import AddNewItemModal from "./menuItems/AddNewItemModal";
 
 const dummyMenu = [
   {
@@ -14,7 +15,7 @@ const dummyMenu = [
     category: "Pizza",
     type: "Vegetarian",
     image: {
-      url: "https://picsum.photos/seed/pizza1/600/600",
+      url: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=600&h=600&fit=crop",
       publicId: "dummy-pizza-1",
     },
     status: "available",
@@ -31,7 +32,7 @@ const dummyMenu = [
     category: "Burger",
     type: "Vegetarian",
     image: {
-      url: "https://picsum.photos/seed/burger1/600/600",
+      url: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&h=600&fit=crop",
       publicId: "dummy-burger-1",
     },
     status: "available",
@@ -48,7 +49,7 @@ const dummyMenu = [
     category: "Wrap",
     type: "Vegetarian",
     image: {
-      url: "https://picsum.photos/seed/wrap1/600/600",
+      url: "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=600&h=600&fit=crop",
       publicId: "dummy-wrap-1",
     },
     status: "unavailable",
@@ -64,7 +65,7 @@ const dummyMenu = [
     category: "Dessert",
     type: "Vegetarian",
     image: {
-      url: "https://picsum.photos/seed/dessert1/600/600",
+      url: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600&h=600&fit=crop",
       publicId: "dummy-dessert-1",
     },
     status: "available",
@@ -80,7 +81,7 @@ const dummyMenu = [
     category: "Beverages",
     type: "Vegetarian",
     image: {
-      url: "https://picsum.photos/seed/coffee1/600/600",
+      url: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&h=600&fit=crop",
       publicId: "dummy-coffee-1",
     },
     status: "discontinued",
@@ -97,7 +98,7 @@ const dummyMenu = [
     category: "Pizza",
     type: "Non-Vegetarian",
     image: {
-      url: "https://picsum.photos/seed/chicken-pizza/600/600",
+      url: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&h=600&fit=crop",
       publicId: "dummy-chicken-pizza",
     },
     status: "available",
@@ -114,7 +115,7 @@ const dummyMenu = [
     category: "Burger",
     type: "Non-Vegetarian",
     image: {
-      url: "https://picsum.photos/seed/chicken-burger/600/600",
+      url: "https://images.unsplash.com/photo-1550547660-d9450f859349?w=600&h=600&fit=crop",
       publicId: "dummy-chicken-burger",
     },
     status: "available",
@@ -130,7 +131,7 @@ const dummyMenu = [
     category: "Main Course",
     type: "Non-Vegetarian",
     image: {
-      url: "https://picsum.photos/seed/butter-chicken/600/600",
+      url: "https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=600&h=600&fit=crop",
       publicId: "dummy-butter-chicken",
     },
     status: "unavailable",
@@ -147,7 +148,7 @@ const dummyMenu = [
     category: "Biryani",
     type: "Non-Vegetarian",
     image: {
-      url: "https://picsum.photos/seed/chicken-biryani/600/600",
+      url: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=600&h=600&fit=crop",
       publicId: "dummy-chicken-biryani",
     },
     status: "available",
@@ -164,7 +165,7 @@ const dummyMenu = [
     category: "Seafood",
     type: "Non-Vegetarian",
     image: {
-      url: "https://picsum.photos/seed/fish-chips/600/600",
+      url: "https://images.unsplash.com/photo-1579208575657-c595a05383b7?w=600&h=600&fit=crop",
       publicId: "dummy-fish-chips",
     },
     status: "available",
@@ -181,7 +182,7 @@ const dummyMenu = [
     category: "Rice",
     type: "Non-Vegetarian",
     image: {
-      url: "https://picsum.photos/seed/prawn-rice/600/600",
+      url: "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&h=600&fit=crop",
       publicId: "dummy-prawn-rice",
     },
     status: "discontinued",
@@ -198,7 +199,7 @@ const dummyMenu = [
     category: "Wrap",
     type: "Non-Vegetarian",
     image: {
-      url: "https://picsum.photos/seed/shawarma-wrap/600/600",
+      url: "https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=600&h=600&fit=crop",
       publicId: "dummy-shawarma-wrap",
     },
     status: "available",
@@ -214,7 +215,7 @@ const dummyMenu = [
     category: "Starter",
     type: "Non-Vegetarian",
     image: {
-      url: "https://picsum.photos/seed/chicken-wings/600/600",
+      url: "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?w=600&h=600&fit=crop",
       publicId: "dummy-chicken-wings",
     },
     status: "unavailable",
@@ -426,6 +427,12 @@ const RestaurantMenu = () => {
           onClose={() => setIsControlsModalOpen(false)}
         />
       )}
+
+      <AddNewItemModal
+        isOpen={isAddNewItemModalOpen}
+        onClose={() => setIsAddNewItemModalOpen(false)}
+        onAdd={(newItem) => setMenuItems((prev) => [newItem, ...prev])}
+      />
     </>
   );
 };
