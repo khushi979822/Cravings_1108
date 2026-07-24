@@ -240,12 +240,22 @@ const statusLabels = {
 
 const RestaurantMenu = () => {
   const [menuItems, setMenuItems] = useState(dummyMenu);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [isAddNewItemModalOpen, setIsAddNewItemModalOpen] = useState(false);
   const [isEditViewItemModalOpen, setIsEditViewItemModalOpen] = useState(false);
   const [isControlsModalOpen, setIsControlsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
+
+  const filteredItems = menuItems.filter((item) => {
+    const q = searchQuery.toLowerCase();
+    return (
+      item.itemName.toLowerCase().includes(q) ||
+      item.category.toLowerCase().includes(q) ||
+      item.type.toLowerCase().includes(q)
+    );
+  });
 
   return (
     <>
@@ -264,8 +274,10 @@ const RestaurantMenu = () => {
               type="text"
               name="search"
               id="search"
-              placeholder="Search menu..."
-              className="border border-(--color-primary) rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-(--color-primary) transition-colors"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by name, category or type..."
+              className="border border-(--color-primary) rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-(--color-primary) transition-colors min-w-[220px]"
             />
           </div>
         </div>
@@ -279,7 +291,12 @@ const RestaurantMenu = () => {
             <div>Actions</div>
           </div>
           <div className="overflow-y-auto max-h-[65vh]">
-            {menuItems.map((item, index) => (
+            {filteredItems.length === 0 && (
+              <div className="text-center text-gray-400 py-10">
+                No items found for &ldquo;{searchQuery}&rdquo;
+              </div>
+            )}
+            {filteredItems.map((item, index) => (
               <div
                 key={index}
                 className="grid grid-cols-7 gap-4 border-b border-(--color-secondary) py-2 items-center"
