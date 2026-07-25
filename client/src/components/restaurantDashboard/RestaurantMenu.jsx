@@ -6,6 +6,7 @@ import { AiTwotoneLike } from "react-icons/ai";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import ConfirmModal from "./menuItems/ConfirmModal";
 import AddNewItemModal from "./menuItems/AddNewItemModal";
+import EditOrViewItem from "./menuItems/EditOrViewItem";
 
 const dummyMenu = [
   {
@@ -248,6 +249,58 @@ const RestaurantMenu = () => {
   const [modalMode, setModalMode] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
 
+  const handleUpdateItem = (updatedItem) => {
+    setMenuItems((prev) =>
+      prev.map((item) =>
+        item.itemName === selectedItem.itemName ? updatedItem : item
+      )
+    );
+  };
+
+  const handleStatusChange = (targetItem, newStatus) => {
+    setMenuItems((prev) =>
+      prev.map((item) =>
+        item.itemName === targetItem.itemName
+          ? { ...item, status: newStatus }
+          : item
+      )
+    );
+  };
+
+  const handleConfirmAction = () => {
+    if (!selectedItem || !modalMode) return;
+
+    if (modalMode === "delete") {
+      setMenuItems((prev) =>
+        prev.filter((item) => item.itemName !== selectedItem.itemName)
+      );
+    } else if (modalMode === "topRated") {
+      setMenuItems((prev) =>
+        prev.map((item) =>
+          item.itemName === selectedItem.itemName
+            ? { ...item, isTopRated: !item.isTopRated }
+            : item
+        )
+      );
+    } else if (modalMode === "recommended") {
+      setMenuItems((prev) =>
+        prev.map((item) =>
+          item.itemName === selectedItem.itemName
+            ? { ...item, isRecommended: !item.isRecommended }
+            : item
+        )
+      );
+    } else if (modalMode === "new") {
+      setMenuItems((prev) =>
+        prev.map((item) =>
+          item.itemName === selectedItem.itemName
+            ? { ...item, isNew: !item.isNew }
+            : item
+        )
+      );
+    }
+  };
+
   const filteredItems = menuItems.filter((item) => {
     const q = searchQuery.toLowerCase();
     return (
@@ -329,7 +382,7 @@ const RestaurantMenu = () => {
                         statusChipStyles[item.status]
                       }`}
                       onChange={(e) => {
-                        // Handle status change logic here
+                        handleStatusChange(item, e.target.value);
                       }}
                     >
                       <option value="available">
@@ -442,6 +495,17 @@ const RestaurantMenu = () => {
           modalMode={modalMode}
           isOpen={isControlsModalOpen}
           onClose={() => setIsControlsModalOpen(false)}
+          onConfirm={handleConfirmAction}
+        />
+      )}
+
+      {isEditViewItemModalOpen && (
+        <EditOrViewItem
+          isOpen={isEditViewItemModalOpen}
+          mode={modalMode}
+          item={selectedItem}
+          onClose={() => setIsEditViewItemModalOpen(false)}
+          onSave={handleUpdateItem}
         />
       )}
 
