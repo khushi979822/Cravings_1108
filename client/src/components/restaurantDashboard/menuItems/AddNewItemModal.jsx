@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { LuLoaderCircle, LuUpload } from "react-icons/lu";
 import toast from "react-hot-toast";
+import api from "../../../config/api.config";
 
 const defaultForm = {
   itemName: "",
@@ -68,29 +69,30 @@ const AddNewItemModal = ({ isOpen, onClose, onAdd }) => {
 
     setIsLoading(true);
     try {
-      // Build the new item object matching dummyMenu shape
-      const newItem = {
-        itemName: form.itemName.trim(),
-        description: form.description.trim(),
-        price: parseFloat(form.price),
-        category: form.category,
-        type: form.type,
-        image: {
-          url: preview || `https://picsum.photos/seed/${Date.now()}/600/600`,
-          publicId: `item-${Date.now()}`,
-        },
-        status: form.status,
-        isTopRated: form.isTopRated,
-        isRecommended: form.isRecommended,
-        isNew: form.isNew,
-        isDeleted: false,
-      };
+      const formData = new FormData();
+      formData.append("itemName", form.itemName.trim());
+      formData.append("description", form.description.trim());
+      formData.append("price", parseFloat(form.price));
+      formData.append("category", form.category);
+      formData.append("type", form.type);
+      formData.append("status", form.status);
+      formData.append("isTopRated", form.isTopRated);
+      formData.append("isRecommended", form.isRecommended);
+      formData.append("isNew", form.isNew);
 
-      onAdd(newItem);
+      if (form.image) {
+        formData.append("image", form.image);
+      }
+
+      const res = await api.post("/restaurant/menu/item", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      onAdd(res.data.data);
       toast.success("Menu item added successfully!");
       handleClose();
     } catch (error) {
-      toast.error("Failed to add item. Please try again.");
+      toast.error(error.response?.data?.message || "Failed to add item. Please try again.");
     } finally {
       setIsLoading(false);
     }

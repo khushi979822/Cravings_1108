@@ -6,6 +6,10 @@ import {
   RestaurantUpdateInfo,
   OpenRestaurant,
   RestaurantUpdateLegalInfo,
+  getRestaurantMenu,
+  addMenuItem,
+  updateMenuItem,
+  deleteMenuItem,
 } from "../controllers/restaurant.controller.js";
 import { RestaurantAuthProtect } from "../middleware/auth.middleware.js";
 
@@ -38,6 +42,29 @@ router.put(
   "/update-legal-info",
   RestaurantAuthProtect,
   RestaurantUpdateLegalInfo,
+);
+
+// Menu management routes
+router.get("/menu", RestaurantAuthProtect, getRestaurantMenu);
+
+router.post(
+  "/menu/item",
+  RestaurantAuthProtect,
+  upload.single("image"),
+  addMenuItem,
+);
+
+router.put(
+  "/menu/item/:itemId",
+  RestaurantAuthProtect,
+  upload.single("image"),
+  updateMenuItem,
+);
+
+router.delete(
+  "/menu/item/:itemId",
+  RestaurantAuthProtect,
+  deleteMenuItem,
 );
 
 export default router;

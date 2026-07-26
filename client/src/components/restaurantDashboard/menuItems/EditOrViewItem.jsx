@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { LuLoaderCircle, LuUpload } from "react-icons/lu";
 import toast from "react-hot-toast";
+import api from "../../../config/api.config";
 
 const CATEGORIES = [
   "Pizza","Burger","Wrap","Dessert","Beverages","Biryani",
@@ -11,6 +12,7 @@ const CATEGORIES = [
 const EditOrViewItem = ({ isOpen, onClose, item, mode, onSave }) => {
   const [form, setForm] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const fileRef = useRef();
   const isView = mode === "view";
@@ -19,6 +21,7 @@ const EditOrViewItem = ({ isOpen, onClose, item, mode, onSave }) => {
     if (item) {
       setForm({ ...item });
       setPreview(item.image?.url || null);
+      setSelectedFile(null);
     }
   }, [item]);
 
@@ -34,9 +37,9 @@ const EditOrViewItem = ({ isOpen, onClose, item, mode, onSave }) => {
     if (isView) return;
     const file = e.target.files[0];
     if (!file) return;
+    setSelectedFile(file);
     const url = URL.createObjectURL(file);
     setPreview(url);
-    setForm((prev) => ({ ...prev, image: { ...prev.image, url } }));
   };
 
   const handleClose = () => onClose();
@@ -48,13 +51,33 @@ const EditOrViewItem = ({ isOpen, onClose, item, mode, onSave }) => {
     if (!form.category) return toast.error("Please select a category.");
     if (!form.price || isNaN(form.price) || Number(form.price) <= 0)
       return toast.error("Please enter a valid price.");
+
     setIsLoading(true);
     try {
-      onSave({ ...form, price: parseFloat(form.price) });
+      const formData = new FormData();
+      formData.append("itemName", form.itemName.trim());
+      formData.append("description", form.description ? form.description.trim() : "");
+      formData.append("price", parseFloat(form.price));
+      formData.append("category", form.category);
+      formData.append("type", form.type || "Vegetarian");
+      formData.append("status", form.status || "available");
+      formData.append("isTopRated", form.isTopRated || false);
+      formData.append("isRecommended", form.isRecommended || false);
+      formData.append("isNew", form.isNew || false);
+
+      if (selectedFile) {
+        formData.append("image", selectedFile);
+      }
+
+      const res = await api.put(`/restaurant/menu/item/${form._id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      onSave(res.data.data);
       toast.success("Menu item updated successfully!");
       handleClose();
-    } catch {
-      toast.error("Failed to update item. Please try again.");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to update item. Please try again.");
     } finally {
       setIsLoading(false);
     }

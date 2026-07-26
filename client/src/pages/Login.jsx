@@ -54,8 +54,7 @@ function Login() {
       });
 
       toast.success(res.data.message);
-      sessionStorage.setItem("cravingUser", JSON.stringify(res.data.data));
-      setUser(res.data.data);
+      setUser(res.data.data, formData.rememberMe);
       setIsLogin(true);
       setRole(res.data.data.userType);
 

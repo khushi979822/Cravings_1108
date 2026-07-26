@@ -26,6 +26,7 @@ const Navbar = () => {
       const res = await api.get("/auth/logout");
       toast.success(res.data.message);
 
+      localStorage.removeItem("cravingUser");
       sessionStorage.removeItem("cravingUser");
       sessionStorage.removeItem("UserData");
       sessionStorage.removeItem("cravingRole");

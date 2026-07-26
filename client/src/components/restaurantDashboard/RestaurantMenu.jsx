@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaAward, FaRegGrinStars } from "react-icons/fa";
 import { BiSolidDish } from "react-icons/bi";
-import { LuPencilLine, LuTrash2, LuEye, LuChevronDown } from "react-icons/lu";
+import { LuPencilLine, LuTrash2, LuEye, LuChevronDown, LuLoaderCircle } from "react-icons/lu";
 import { AiTwotoneLike } from "react-icons/ai";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import ConfirmModal from "./menuItems/ConfirmModal";
 import AddNewItemModal from "./menuItems/AddNewItemModal";
 import EditOrViewItem from "./menuItems/EditOrViewItem";
+import api from "../../config/api.config";
+import toast from "react-hot-toast";
 
 const dummyMenu = [
   {
@@ -240,7 +242,8 @@ const statusLabels = {
 };
 
 const RestaurantMenu = () => {
-  const [menuItems, setMenuItems] = useState(dummyMenu);
+  const [menuItems, setMenuItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
   const [isAddNewItemModalOpen, setIsAddNewItemModalOpen] = useState(false);
@@ -249,55 +252,84 @@ const RestaurantMenu = () => {
   const [modalMode, setModalMode] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
 
+  const fetchMenu = async () => {
+    try {
+      setIsLoading(true);
+      const res = await api.get("/restaurant/menu");
+      setMenuItems(res.data.data || []);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to load menu items");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMenu();
+  }, []);
+
   const handleUpdateItem = (updatedItem) => {
     setMenuItems((prev) =>
       prev.map((item) =>
-        item.itemName === selectedItem.itemName ? updatedItem : item
-      )
-    );
-  };
-
-  const handleStatusChange = (targetItem, newStatus) => {
-    setMenuItems((prev) =>
-      prev.map((item) =>
-        item.itemName === targetItem.itemName
-          ? { ...item, status: newStatus }
+        (item._id && item._id === updatedItem._id) || item.itemName === updatedItem.itemName
+          ? updatedItem
           : item
       )
     );
   };
 
-  const handleConfirmAction = () => {
+  const handleStatusChange = async (targetItem, newStatus) => {
+    try {
+      const res = await api.put(`/restaurant/menu/item/${targetItem._id}`, {
+        status: newStatus,
+      });
+      toast.success("Status updated successfully");
+      setMenuItems((prev) =>
+        prev.map((item) => (item._id === targetItem._id ? res.data.data : item))
+      );
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to update status");
+    }
+  };
+
+  const handleConfirmAction = async () => {
     if (!selectedItem || !modalMode) return;
 
-    if (modalMode === "delete") {
-      setMenuItems((prev) =>
-        prev.filter((item) => item.itemName !== selectedItem.itemName)
-      );
-    } else if (modalMode === "topRated") {
-      setMenuItems((prev) =>
-        prev.map((item) =>
-          item.itemName === selectedItem.itemName
-            ? { ...item, isTopRated: !item.isTopRated }
-            : item
-        )
-      );
-    } else if (modalMode === "recommended") {
-      setMenuItems((prev) =>
-        prev.map((item) =>
-          item.itemName === selectedItem.itemName
-            ? { ...item, isRecommended: !item.isRecommended }
-            : item
-        )
-      );
-    } else if (modalMode === "new") {
-      setMenuItems((prev) =>
-        prev.map((item) =>
-          item.itemName === selectedItem.itemName
-            ? { ...item, isNew: !item.isNew }
-            : item
-        )
-      );
+    try {
+      if (modalMode === "delete") {
+        await api.delete(`/restaurant/menu/item/${selectedItem._id}`);
+        toast.success("Item deleted successfully");
+        setMenuItems((prev) =>
+          prev.filter((item) => item._id !== selectedItem._id)
+        );
+      } else if (modalMode === "topRated") {
+        const res = await api.put(`/restaurant/menu/item/${selectedItem._id}`, {
+          isTopRated: !selectedItem.isTopRated,
+        });
+        toast.success(res.data.message || "Updated top rated status");
+        setMenuItems((prev) =>
+          prev.map((item) => (item._id === selectedItem._id ? res.data.data : item))
+        );
+      } else if (modalMode === "recommended") {
+        const res = await api.put(`/restaurant/menu/item/${selectedItem._id}`, {
+          isRecommended: !selectedItem.isRecommended,
+        });
+        toast.success(res.data.message || "Updated recommended status");
+        setMenuItems((prev) =>
+          prev.map((item) => (item._id === selectedItem._id ? res.data.data : item))
+        );
+      } else if (modalMode === "new") {
+        const res = await api.put(`/restaurant/menu/item/${selectedItem._id}`, {
+          isNew: !selectedItem.isNew,
+        });
+        toast.success(res.data.message || "Updated new status");
+        setMenuItems((prev) =>
+          prev.map((item) => (item._id === selectedItem._id ? res.data.data : item))
+        );
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Action failed");
     }
   };
 
@@ -344,16 +376,23 @@ const RestaurantMenu = () => {
             <div>Actions</div>
           </div>
           <div className="overflow-y-auto max-h-[65vh]">
-            {filteredItems.length === 0 && (
-              <div className="text-center text-gray-400 py-10">
-                No items found for &ldquo;{searchQuery}&rdquo;
+            {isLoading ? (
+              <div className="flex justify-center items-center py-12 text-(--color-primary)">
+                <LuLoaderCircle className="animate-spin text-3xl" />
+                <span className="ml-2 font-medium">Loading menu...</span>
               </div>
-            )}
-            {filteredItems.map((item, index) => (
-              <div
-                key={index}
-                className="grid grid-cols-7 gap-4 border-b border-(--color-secondary) py-2 items-center"
-              >
+            ) : filteredItems.length === 0 ? (
+              <div className="text-center text-gray-400 py-10">
+                {searchQuery
+                  ? `No items found for "${searchQuery}"`
+                  : "No menu items added yet. Click 'Add New Item' to create one!"}
+              </div>
+            ) : (
+              filteredItems.map((item, index) => (
+                <div
+                  key={item._id || index}
+                  className="grid grid-cols-7 gap-4 border-b border-(--color-secondary) py-2 items-center"
+                >
                 <div className="col-span-2 flex items-center gap-4">
                   <div>
                     <img
@@ -484,7 +523,7 @@ const RestaurantMenu = () => {
                   </button>
                 </div>
               </div>
-            ))}
+            )))}
           </div>
         </div>
       </div>

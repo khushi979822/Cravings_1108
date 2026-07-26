@@ -1,4 +1,5 @@
 import Restaurant from "../models/restaurant.model.js";
+import Menu from "../models/menu.model.js";
 import {
   uploadMultipleImages,
   deleteMultipleImages,
@@ -269,3 +270,255 @@ export const RestaurantUpdateLegalInfo = async (req, res, next) => {
     next();
   }
 };
+
+const findOrCreateRestaurantForManager = async (currentUser) => {
+  let existingRestaurant = await Restaurant.findOne({
+    managerId: currentUser._id,
+  });
+
+  if (!existingRestaurant) {
+    existingRestaurant = await Restaurant.create({
+      managerId: currentUser._id,
+      restaurantName: currentUser.fullName ? `${currentUser.fullName}'s Kitchen` : "My Restaurant",
+      description: "Welcome to our restaurant! Enjoy fresh & delicious meals.",
+      cuisineTypes: ["Multi-Cuisine"],
+      restaurantType: "both",
+      contactDetails: {
+        email: currentUser.email || "manager@cravings.com",
+        phone: currentUser.phone || "0000000000",
+      },
+      servingHours: {
+        openingTime: "09:00 AM",
+        closingTime: "10:00 PM",
+      },
+      isOpen: true,
+      status: "active",
+    });
+  }
+
+  return existingRestaurant;
+};
+
+export const getRestaurantMenu = async (req, res, next) => {
+  try {
+    const currentUser = req.user;
+    const existingRestaurant = await findOrCreateRestaurantForManager(currentUser);
+
+    let menu = await Menu.findOne({ restaurantId: existingRestaurant._id });
+    if (!menu) {
+      menu = await Menu.create({
+        restaurantId: existingRestaurant._id,
+        menuItems: [],
+      });
+    }
+
+    return res.status(200).json({
+      message: "Menu fetched successfully",
+      data: menu.menuItems.filter((item) => !item.isDeleted),
+    });
+  } catch (error) {
+    console.log(error.message);
+    next(error);
+  }
+};
+
+export const addMenuItem = async (req, res, next) => {
+  try {
+    const currentUser = req.user;
+    const existingRestaurant = await findOrCreateRestaurantForManager(currentUser);
+
+    let menu = await Menu.findOne({ restaurantId: existingRestaurant._id });
+    if (!menu) {
+      menu = await Menu.create({
+        restaurantId: existingRestaurant._id,
+        menuItems: [],
+      });
+    }
+
+    const {
+      itemName,
+      description,
+      price,
+      category,
+      type,
+      status,
+      isTopRated,
+      isRecommended,
+      isNew,
+    } = req.body;
+
+    if (!itemName || !price || !category) {
+      const error = new Error("Item name, price, and category are required");
+      error.statusCode = 400;
+      return next(error);
+    }
+
+    let imageObj = {
+      url: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&h=600&fit=crop",
+      publicId: `default-${Date.now()}`,
+    };
+
+    if (req.file) {
+      imageObj = await uploadSingleImage(
+        req.file,
+        `restaurant/${existingRestaurant._id}/menu`,
+      );
+    } else if (req.body.image) {
+      try {
+        imageObj = typeof req.body.image === "string" ? JSON.parse(req.body.image) : req.body.image;
+      } catch (e) {
+        if (typeof req.body.image === "string") {
+          imageObj = { url: req.body.image, publicId: `url-${Date.now()}` };
+        }
+      }
+    }
+
+    const newItem = {
+      itemName: itemName.trim(),
+      description: description ? description.trim() : "",
+      price: parseFloat(price),
+      category: category.trim(),
+      type: type || "Vegetarian",
+      status: status || "available",
+      image: imageObj,
+      isAvailable: status !== "unavailable" && status !== "discontinued",
+      isTopRated: isTopRated === "true" || isTopRated === true,
+      isRecommended: isRecommended === "true" || isRecommended === true,
+      isNew: isNew === "true" || isNew === true,
+      isDeleted: false,
+    };
+
+    menu.menuItems.push(newItem);
+    await menu.save();
+
+    const addedItem = menu.menuItems[menu.menuItems.length - 1];
+
+    return res.status(201).json({
+      message: "Menu item added successfully",
+      data: addedItem,
+    });
+  } catch (error) {
+    console.log(error.message);
+    next(error);
+  }
+};
+
+export const updateMenuItem = async (req, res, next) => {
+  try {
+    const currentUser = req.user;
+    const { itemId } = req.params;
+
+    const existingRestaurant = await findOrCreateRestaurantForManager(currentUser);
+
+    const menu = await Menu.findOne({
+      restaurantId: existingRestaurant._id,
+      "menuItems._id": itemId,
+    });
+
+    if (!menu) {
+      const error = new Error("Menu item not found");
+      error.statusCode = 404;
+      return next(error);
+    }
+
+    const item = menu.menuItems.id(itemId);
+    if (!item) {
+      const error = new Error("Menu item not found");
+      error.statusCode = 404;
+      return next(error);
+    }
+
+    const {
+      itemName,
+      description,
+      price,
+      category,
+      type,
+      status,
+      isTopRated,
+      isRecommended,
+      isNew,
+      isDeleted,
+    } = req.body;
+
+    if (itemName !== undefined) item.itemName = itemName.trim();
+    if (description !== undefined) item.description = description.trim();
+    if (price !== undefined) item.price = parseFloat(price);
+    if (category !== undefined) item.category = category.trim();
+    if (type !== undefined) item.type = type;
+    if (status !== undefined) {
+      item.status = status;
+      item.isAvailable = status === "available";
+    }
+    if (isTopRated !== undefined) item.isTopRated = isTopRated === "true" || isTopRated === true;
+    if (isRecommended !== undefined) item.isRecommended = isRecommended === "true" || isRecommended === true;
+    if (isNew !== undefined) item.isNew = isNew === "true" || isNew === true;
+    if (isDeleted !== undefined) item.isDeleted = isDeleted === "true" || isDeleted === true;
+
+    if (req.file) {
+      if (item.image?.publicId && !item.image.publicId.startsWith("default-")) {
+        await deleteSingleImage(item.image).catch(() => {});
+      }
+      const imageObj = await uploadSingleImage(
+        req.file,
+        `restaurant/${existingRestaurant._id}/menu`,
+      );
+      item.image = imageObj;
+    } else if (req.body.image) {
+      try {
+        const parsed = typeof req.body.image === "string" ? JSON.parse(req.body.image) : req.body.image;
+        if (parsed.url) item.image = parsed;
+      } catch (e) {
+        if (typeof req.body.image === "string" && req.body.image.startsWith("http")) {
+          item.image = { url: req.body.image, publicId: `url-${Date.now()}` };
+        }
+      }
+    }
+
+    await menu.save();
+
+    return res.status(200).json({
+      message: "Menu item updated successfully",
+      data: item,
+    });
+  } catch (error) {
+    console.log(error.message);
+    next(error);
+  }
+};
+
+export const deleteMenuItem = async (req, res, next) => {
+  try {
+    const currentUser = req.user;
+    const { itemId } = req.params;
+
+    const existingRestaurant = await findOrCreateRestaurantForManager(currentUser);
+
+    const menu = await Menu.findOne({
+      restaurantId: existingRestaurant._id,
+      "menuItems._id": itemId,
+    });
+
+    if (!menu) {
+      const error = new Error("Menu item not found");
+      error.statusCode = 404;
+      return next(error);
+    }
+
+    const item = menu.menuItems.id(itemId);
+    if (item && item.image?.publicId && !item.image.publicId.startsWith("default-")) {
+      await deleteSingleImage(item.image).catch(() => {});
+    }
+
+    menu.menuItems = menu.menuItems.filter((i) => i._id.toString() !== itemId);
+    await menu.save();
+
+    return res.status(200).json({
+      message: "Menu item deleted successfully",
+    });
+  } catch (error) {
+    console.log(error.message);
+    next(error);
+  }
+};
+

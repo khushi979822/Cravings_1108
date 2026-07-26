@@ -14,6 +14,8 @@ const MenuSchema = mongoose.Schema(
           description: { type: String, required: true },
           price: { type: Number, required: true },
           category: { type: String, required: true },
+          type: { type: String, default: "Vegetarian" },
+          status: { type: String, default: "available" },
           image: {
             type: { url: { type: String }, publicId: { type: String } },
             required: true,
@@ -22,6 +24,7 @@ const MenuSchema = mongoose.Schema(
           isTopRated: { type: Boolean, default: false },
           isRecommended: { type: Boolean, default: false },
           isNew: { type: Boolean, default: false },
+          isDeleted: { type: Boolean, default: false },
         },
       ],
     },
