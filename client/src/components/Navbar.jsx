@@ -95,15 +95,21 @@ const Navbar = () => {
             </button>
           </div>
         ) : (
-          <>
-            <Link to="/login" className="text-white hover:underline">
+          <div className="flex items-center gap-3">
+            <Link
+              to="/login"
+              className="text-white font-medium hover:text-orange-100 px-3 py-1.5 transition-colors"
+            >
               Login
             </Link>
 
-            <Link to="/register" className="text-white hover:underline">
+            <Link
+              to="/register"
+              className="bg-white text-orange-700 font-semibold px-4 py-1.5 rounded-lg hover:bg-orange-50 transition-colors shadow-sm"
+            >
               Register
             </Link>
-          </>
+          </div>
         )}
       </div>
     </nav>

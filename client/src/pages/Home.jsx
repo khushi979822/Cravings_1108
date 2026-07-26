@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 import heroImage from "../images/bgImage1-BgVBBcls.jpg";
 
@@ -9,6 +10,8 @@ import countrySide from "../images/country side coulture.webp";
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+  const { isLogin } = useAuth();
 
   const restaurants = [
     {
@@ -33,14 +36,13 @@ function Home() {
 
   const handleSearch = (e) => {
     e.preventDefault();
-
-    const payload = {
-      searchQuery,
-      page: "home",
-      action: "search",
-    };
-
-    console.log("Home payload ready for backend:", payload);
+    if (searchQuery.trim()) {
+      if (isLogin) {
+        navigate(`/customer-dashboard?search=${encodeURIComponent(searchQuery.trim())}`);
+      } else {
+        navigate("/login");
+      }
+    }
   };
 
   return (
@@ -129,7 +131,10 @@ function Home() {
 
                 <p className="text-gray-600">{restaurant.cuisine}</p>
 
-                <button className="w-full mt-5 bg-orange-600 text-white py-3 rounded-lg hover:bg-orange-700 transition-colors duration-200 font-medium">
+                <button
+                  onClick={() => navigate(isLogin ? "/customer-dashboard" : "/login")}
+                  className="w-full mt-5 bg-orange-600 text-white py-3 rounded-lg hover:bg-orange-700 transition-colors duration-200 font-medium"
+                >
                   Explore Menu
                 </button>
               </div>
