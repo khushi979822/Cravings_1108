@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { LuLoaderCircle, LuUpload } from "react-icons/lu";
 import toast from "react-hot-toast";
@@ -42,11 +42,11 @@ const EditOrViewItem = ({ isOpen, onClose, item, mode, onSave }) => {
     setPreview(url);
   };
 
-  const handleClose = () => onClose();
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isView) return handleClose();
+    if (isView) return onClose();
     if (!form.itemName?.trim()) return toast.error("Item name is required.");
     if (!form.category) return toast.error("Please select a category.");
     if (!form.price || isNaN(form.price) || Number(form.price) <= 0)
@@ -75,7 +75,7 @@ const EditOrViewItem = ({ isOpen, onClose, item, mode, onSave }) => {
 
       onSave(res.data.data);
       toast.success("Menu item updated successfully!");
-      handleClose();
+      onClose();
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to update item. Please try again.");
     } finally {
@@ -94,7 +94,7 @@ const EditOrViewItem = ({ isOpen, onClose, item, mode, onSave }) => {
           <h2 className="font-bold text-xl text-(--color-primary)">
             {isView ? "View Menu Item" : "Edit Menu Item"}
           </h2>
-          <button onClick={handleClose} type="button">
+          <button onClick={onClose} type="button">
             <IoIosCloseCircleOutline className="text-red-400 hover:text-red-700 text-2xl" />
           </button>
         </header>
@@ -223,7 +223,7 @@ const EditOrViewItem = ({ isOpen, onClose, item, mode, onSave }) => {
 
           <footer className="p-4 border-t border-(--color-secondary) flex justify-end gap-3 sticky bottom-0 bg-white">
             <button
-              type="button" onClick={handleClose} disabled={isLoading}
+              type="button" onClick={onClose} disabled={isLoading}
               className="px-4 py-2 rounded bg-(--color-secondary) text-(--color-secondary-content) text-sm hover:opacity-80 transition-opacity"
             >
               {isView ? "Close" : "Cancel"}
