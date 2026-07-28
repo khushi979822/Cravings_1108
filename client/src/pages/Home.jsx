@@ -47,7 +47,7 @@ function Home() {
   // Auto-advance carousel
   const next = useCallback(() => setCurrent((c) => (c + 1) % CAROUSEL_IMAGES.length), []);
   useEffect(() => {
-    const timer = setInterval(next, 3000);
+    const timer = setInterval(next, 5000);
     return () => clearInterval(timer);
   }, [next]);
 
@@ -95,18 +95,34 @@ function Home() {
 
         {/* Content */}
         <div className="relative z-20 h-full flex flex-col items-center justify-center text-center text-white px-4">
-          <h1 className="text-5xl md:text-7xl font-extrabold mb-5 leading-tight drop-shadow-lg">
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-5 leading-tight drop-shadow-lg">
             Your Favorite Food,<br />
-            <span className="text-orange-400">Delivered Fast</span>
+            Delivered Fast
           </h1>
-          <p className="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl">
-            Order from the best local restaurants and get it delivered hot to your doorstep.
+          <p className="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl">
+            Order from thousands of restaurants and get it delivered to your doorstep.
           </p>
+
+          {/* CTA Buttons */}
+          <div className="flex gap-4 flex-wrap justify-center mb-8">
+            <Link
+              to="/register"
+              className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-10 py-3 rounded-lg transition-all duration-200 shadow-lg"
+            >
+              Sign Up
+            </Link>
+            <Link
+              to="/login"
+              className="bg-white text-gray-900 hover:bg-gray-100 font-semibold px-10 py-3 rounded-lg transition-all duration-200"
+            >
+              Order Now
+            </Link>
+          </div>
 
           {/* Search */}
           <form
             onSubmit={handleSearch}
-            className="w-full max-w-2xl bg-white rounded-2xl flex items-center px-5 py-3 shadow-2xl mb-10 gap-3"
+            className="w-full max-w-3xl bg-white/95 rounded-xl flex items-center px-5 py-3.5 shadow-2xl gap-3"
           >
             <span className="text-gray-400 text-xl">🔍</span>
             <input
@@ -114,32 +130,10 @@ function Home() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search restaurants or dishes..."
-              className="flex-1 outline-none text-gray-700 placeholder-gray-400 text-base"
+              className="flex-1 outline-none text-gray-700 placeholder-gray-400 text-base bg-transparent"
               aria-label="Search restaurants or dishes"
             />
-            <button
-              type="submit"
-              className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-5 py-2 rounded-xl transition-colors duration-200 text-sm"
-            >
-              Search
-            </button>
           </form>
-
-          {/* CTA Buttons */}
-          <div className="flex gap-4 flex-wrap justify-center">
-            <Link
-              to="/register"
-              className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-8 py-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-orange-500/30 hover:-translate-y-0.5"
-            >
-              Get Started
-            </Link>
-            <Link
-              to="/login"
-              className="bg-white/15 hover:bg-white/25 backdrop-blur border border-white/30 text-white font-semibold px-8 py-3 rounded-xl transition-all duration-200"
-            >
-              Order Now
-            </Link>
-          </div>
         </div>
 
         {/* Carousel Dots */}
