@@ -43,85 +43,90 @@ export const RestaurantGetData = async (req, res, next) => {
 export const RestaurantUpdateProfile = async (req, res, next) => {
   try {
     const currentUser = req.user;
-    const restaurantDataFromFE = req.body;
-    const coverImageFromFE = req.files?.coverImage;
-    const restaurantImageFromFE = req.files?.restaurantImage;
+    const restaurantDataFromFE = req.body || {};
+    
+    // Support multer fields array, single file, or req.file
+    const coverImageFile = Array.isArray(req.files?.coverImage)
+      ? req.files.coverImage[0]
+      : (req.files?.coverImage || req.file);
+      
+    const restaurantImageFiles = req.files?.restaurantImage;
 
-    const dataKeys = Object.keys(restaurantDataFromFE);
-
-    dataKeys.forEach((key) => {
-      if (!restaurantDataFromFE[key]) {
-        const error = new Error(`Missing required field: ${key}`);
-        error.statusCode = 400;
-        return next(error);
-      }
-    });
-
-    const existingRestaurant = await Restaurant.findOne({
+    let existingRestaurant = await Restaurant.findOne({
       managerId: currentUser._id,
     });
 
     if (!existingRestaurant) {
-      if (coverImageFromFE) {
-        const coverImage = await uploadSingleImage(
-          coverImageFromFE,
+      let coverImage = null;
+      let restaurantImage = [];
+
+      if (coverImageFile) {
+        coverImage = await uploadSingleImage(
+          coverImageFile,
           `restaurant/${currentUser.phone}/coverPhoto`,
         );
-        dataKeys.push("coverImage");
-        restaurantDataFromFE.coverImage = coverImage;
       }
 
-      if (restaurantImageFromFE && restaurantImageFromFE.length > 0) {
-        const restaurantImage = await uploadMultipleImages(
-          restaurantImageFromFE,
+      if (restaurantImageFiles && restaurantImageFiles.length > 0) {
+        restaurantImage = await uploadMultipleImages(
+          restaurantImageFiles,
           `restaurant/${currentUser.phone}/restaurantPhotos`,
         );
-        dataKeys.push("restaurantImage");
-        restaurantDataFromFE.restaurantImage = restaurantImage;
       }
 
-      const newRestaurant = await Restaurant.create({
+      existingRestaurant = await Restaurant.create({
         managerId: currentUser._id,
+        restaurantName: restaurantDataFromFE.restaurantName || `${currentUser.fullName || "My"}'s Kitchen`,
+        coverImage,
+        restaurantImage,
         ...restaurantDataFromFE,
       });
+
       return res.status(201).json({
         message: "Restaurant profile created successfully",
-        data: newRestaurant,
+        data: existingRestaurant,
       });
     } else {
-      if (coverImageFromFE) {
-        await deleteSingleImage(existingRestaurant.coverImage);
-
+      if (coverImageFile) {
+        if (existingRestaurant.coverImage) {
+          await deleteSingleImage(existingRestaurant.coverImage);
+        }
         const coverImage = await uploadSingleImage(
-          coverImageFromFE,
+          coverImageFile,
           `restaurant/${currentUser.phone}/coverPhoto`,
         );
-        dataKeys.push("coverImage");
-        restaurantDataFromFE.coverImage = coverImage;
+        existingRestaurant.coverImage = coverImage;
       }
-      if (restaurantImageFromFE && restaurantImageFromFE.length > 0) {
-        await deleteMultipleImages(existingRestaurant.restaurantImage);
 
-        const restaurantImage = await uploadMultipleImages(
-          restaurantImageFromFE,
+      if (restaurantImageFiles && restaurantImageFiles.length > 0) {
+        const newImages = await uploadMultipleImages(
+          restaurantImageFiles,
           `restaurant/${currentUser.phone}/restaurantPhotos`,
         );
-        dataKeys.push("restaurantImage");
-        restaurantDataFromFE.restaurantImage = restaurantImage;
+        // Combine or set restaurant images
+        existingRestaurant.restaurantImage = [
+          ...(existingRestaurant.restaurantImage || []),
+          ...newImages,
+        ];
       }
-      dataKeys.forEach((key) => {
-        existingRestaurant[key] =
-          restaurantDataFromFE[key] || existingRestaurant[key];
+
+      // Update remaining fields from req.body if provided
+      Object.keys(restaurantDataFromFE).forEach((key) => {
+        if (restaurantDataFromFE[key]) {
+          existingRestaurant[key] = restaurantDataFromFE[key];
+        }
       });
+
       await existingRestaurant.save();
+
       return res.status(200).json({
         message: "Restaurant profile updated successfully",
         data: existingRestaurant,
       });
     }
   } catch (error) {
-    console.log(error.message);
-    next();
+    console.error("Error in RestaurantUpdateProfile:", error);
+    next(error);
   }
 };
 

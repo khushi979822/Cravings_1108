@@ -28,22 +28,25 @@ export const uploadMultipleImages = async (Images, storageLocation) => {
 
 export const deleteMultipleImages = async (Images) => {
   try {
+    if (!Array.isArray(Images) || Images.length === 0) return;
     const deleteMultiple = Images.map(async (image) => {
-      await cloudinary.uploader.destroy(image.publicId);
+      if (image?.publicId) {
+        await cloudinary.uploader.destroy(image.publicId);
+      }
     });
     await Promise.all(deleteMultiple);
   } catch (error) {
-    console.log(error.message);
-    throw error;
+    console.log("Error deleting multiple images:", error.message);
   }
 };
 
 export const deleteSingleImage = async (image) => {
   try {
-    await cloudinary.uploader.destroy(image.publicId);
+    if (image?.publicId) {
+      await cloudinary.uploader.destroy(image.publicId);
+    }
   } catch (error) {
-    console.log(error.message);
-    throw error;
+    console.log("Error deleting single image:", error.message);
   }
 };
 

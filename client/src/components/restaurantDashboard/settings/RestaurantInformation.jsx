@@ -42,7 +42,7 @@ const RestaurantInformation = () => {
 
       payload.append("displayPic", profilePic);
 
-      const response = await api.put(`/user/edit-profile`, payload);
+      const response = await api.put(`/common/edit-profile`, payload);
 
       setUser(response.data.data);
       sessionStorage.setItem("cravingUser", JSON.stringify(response.data.data));
@@ -102,9 +102,19 @@ const RestaurantInformation = () => {
   const handleSaveRestaurant = async () => {
     try {
       setIsLoading(true);
-
-      // Prepare payload for restaurant update
-      console.log("restaurantFormData", restaurantFormData);
+      await api.put("/restaurant/update-restaurant-info", {
+        restaurantName: restaurantFormData.restaurantName,
+        description: restaurantFormData.description,
+        restaurantType: restaurantFormData.restaurantType,
+        cuisineTypes: restaurantFormData.cuisineTypes,
+        contactEmail: restaurantFormData.contactEmail,
+        contactPhone: restaurantFormData.contactPhone,
+        openingTime: restaurantFormData.openingTime,
+        closingTime: restaurantFormData.closingTime,
+      });
+      await fetchRestaurantData();
+      setEditingRestaurant(false);
+      toast.success("Restaurant information updated successfully!");
     } catch (error) {
       toast.error(
         error.response?.data?.message || "Failed to update restaurant",
@@ -154,7 +164,7 @@ const RestaurantInformation = () => {
   };
 
   useEffect(() => {
-    // fetchRestaurantData();
+    fetchRestaurantData();
   }, [user]);
 
   return (

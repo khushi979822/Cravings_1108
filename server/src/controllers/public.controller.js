@@ -29,7 +29,7 @@ export const ContactUsForm = async (req, res, next) => {
 
 export const getPublicRestaurants = async (req, res, next) => {
   try {
-    const restaurants = await Restaurant.find({ status: "active" }).select(
+    const restaurants = await Restaurant.find({ status: { $ne: "blocked" } }).select(
       "restaurantName description coverImage cuisineTypes averageRating isOpen restaurantType"
     );
     res.status(200).json({ message: "Restaurants fetched successfully", data: restaurants });
