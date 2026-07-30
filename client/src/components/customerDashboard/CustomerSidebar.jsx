@@ -1,5 +1,4 @@
-import React from "react";
-import { MdDashboard, MdOutlineLocationOn, MdFavoriteBorder, MdOutlineLocalOffer, MdNotificationsNone } from "react-icons/md";
+import { MdDashboard, MdOutlineLocationOn, MdFavoriteBorder } from "react-icons/md";
 import { FaShoppingCart } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 

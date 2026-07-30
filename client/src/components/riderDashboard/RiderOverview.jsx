@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import api from "../../config/api.config";
 import toast from "react-hot-toast";
-import { LoadingSpinner, StatCard, StatusBadge, EmptyState } from "../common/DashboardShared";
+import { LoadingSpinner, StatCard, StatusBadge } from "../common/DashboardShared";
 import { MdDeliveryDining, MdAttachMoney } from "react-icons/md";
 
 const RiderOverview = () => {

@@ -1,19 +1,15 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { MdEdit } from "react-icons/md";
 import { useAuth } from "../../../context/AuthContext";
 import api from "../../../config/api.config";
 import toast from "react-hot-toast";
-import { MdOutlineAddAPhoto, MdOutlineLockReset } from "react-icons/md";
-import PasswordChangeModal from "../../commonModals/PasswordChangeModal";
 import RunningLoader from "../../../assets/runningLoader.gif";
 
 const ResturantCoreDetails = () => {
-  const { user, setUser } = useAuth();
+  const { user } = useAuth();
 
   // Common State variables
   const [isLoading, setIsLoading] = useState(false);
-  const [isPasswordChangeModalOpen, setIsPasswordChangeModalOpen] =
-    useState(false);
 
   // Restaurant handlers
   const [isLoadingRestaurant, setIsLoadingRestaurant] = useState(false);
@@ -147,7 +143,9 @@ const ResturantCoreDetails = () => {
   };
 
   useEffect(() => {
-    // fetchRestaurantData();
+    if (user?._id) {
+      fetchRestaurantData();
+    }
   }, [user]);
 
   return (

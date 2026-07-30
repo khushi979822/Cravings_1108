@@ -1,4 +1,3 @@
-import React from "react";
 import { MdDashboard } from "react-icons/md";
 import { FaHistory } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";

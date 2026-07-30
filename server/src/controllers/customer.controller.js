@@ -4,8 +4,6 @@ import Restaurant from "../models/restaurant.model.js";
 import Menu from "../models/menu.model.js";
 import Coupon from "../models/coupon.model.js";
 import Review from "../models/review.model.js";
-import Notification from "../models/notification.model.js";
-import User from "../models/user.model.js";
 import mongoose from "mongoose";
 
 // Helper to ensure customer record exists

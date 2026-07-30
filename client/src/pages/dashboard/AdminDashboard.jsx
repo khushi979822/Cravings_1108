@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import AdminSetting from "../../components/adminDashboard/AdminSettings";
@@ -18,7 +18,7 @@ const AdminDashboard = () => {
   const role = auth?.role ?? null;
   const navigate = useNavigate();
   const active = useLocation().state?.activeTab;
-  const [activeTab, setActiveTab] = React.useState(active || "overview");
+  const [activeTab, setActiveTab] = useState(active || "overview");
 
   if (!isLogin || role !== "admin") {
     return (

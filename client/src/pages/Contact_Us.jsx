@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import contactImage from "../images/contactPage.jpg";
 import api from "../config/api.config";
 import toast from "react-hot-toast";

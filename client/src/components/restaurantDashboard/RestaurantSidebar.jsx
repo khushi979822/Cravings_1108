@@ -1,7 +1,5 @@
-import React from "react";
 import { MdDashboard } from "react-icons/md";
 import { FaShoppingCart } from "react-icons/fa";
-import { MdFavoriteBorder } from "react-icons/md";
 import { IoMdSettings } from "react-icons/io";
 import { BiSolidDish } from "react-icons/bi";
 

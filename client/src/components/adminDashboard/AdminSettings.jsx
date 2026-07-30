@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { MdEdit } from "react-icons/md";
 import { MdOutlineLockReset } from "react-icons/md";
 import { useAuth } from "../../context/AuthContext";

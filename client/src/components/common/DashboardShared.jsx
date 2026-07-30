@@ -1,5 +1,3 @@
-import React from "react";
-
 export const StatCard = ({ title, value, icon, description, trend }) => (
   <div className="bg-(--color-base-200) p-5 rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-between border border-(--color-base-300)">
     <div>

@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import RestaurantSidebar from "../../components/restaurantDashboard/RestaurantSidebar";
@@ -11,7 +11,7 @@ const RestaurantDashboard = () => {
   const { isLogin, role } = useAuth();
   const navigate = useNavigate();
   const active = useLocation().state?.activeTab;
-  const [activeTab, setActiveTab] = React.useState(active || "settings");
+  const [activeTab, setActiveTab] = useState(active || "settings");
 
   if (!isLogin || role !== "restaurant") {
     return (

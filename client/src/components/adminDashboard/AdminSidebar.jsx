@@ -1,4 +1,3 @@
-import React from "react";
 import { MdDashboard, MdOutlineRestaurant, MdFastfood, MdCategory, MdPeople, MdDeliveryDining, MdOutlineLocalOffer } from "react-icons/md";
 import { FaShoppingCart } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";

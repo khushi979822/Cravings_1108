@@ -1,4 +1,3 @@
-import React from "react";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { LuTrash2, LuCheck } from "react-icons/lu";
 

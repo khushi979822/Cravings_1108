@@ -1,4 +1,3 @@
-import React from "react";
 import { useState } from "react";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { LuLoaderCircle } from "react-icons/lu";
@@ -36,7 +35,7 @@ const PasswordChangeModal = ({ open, onClose }) => {
         setIsLoading(false);
         return;
       }
-      const res = await api.patch("/user/change-password", formData);
+      await api.patch("/user/change-password", formData);
       toast.success("Password changed successfully!");
       handleCloseModal();
     } catch (error) {

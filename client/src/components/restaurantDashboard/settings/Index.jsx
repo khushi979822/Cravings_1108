@@ -1,4 +1,3 @@
-import React from "react";
 import PresonalInformation from "./PresonalInformation";
 import RestaurantInformation from "./RestaurantInformation";
 import LeagalInformation from "./LegalInformation";

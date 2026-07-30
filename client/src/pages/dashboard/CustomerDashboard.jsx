@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import Sidebar from "../../components/customerDashboard/CustomerSidebar";
 import CustomerOverview from "../../components/customerDashboard/CustomerOverview";
 import CustomerOrders from "../../components/customerDashboard/CustomerOrders";
@@ -14,7 +14,7 @@ const CustomerDashboard = () => {
   const role = auth?.role ?? null;
   const navigate = useNavigate();
   const active = useLocation().state?.activeTab;
-  const [activeTab, setActiveTab] = React.useState(active || "overview");
+  const [activeTab, setActiveTab] = useState(active || "overview");
 
   if (!isLogin || role !== "customer") {
     return (

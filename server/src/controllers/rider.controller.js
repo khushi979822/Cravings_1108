@@ -1,8 +1,5 @@
 import Rider from "../models/rider.model.js";
 import Order from "../models/order.model.js";
-import Restaurant from "../models/restaurant.model.js";
-import Menu from "../models/menu.model.js";
-import User from "../models/user.model.js";
 import mongoose from "mongoose";
 
 // Helper to ensure rider profile exists
