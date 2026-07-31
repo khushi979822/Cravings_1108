@@ -1,5 +1,10 @@
 import Restaurant from "../models/restaurant.model.js";
 import Menu from "../models/menu.model.js";
+import {
+  uploadSingleImage,
+  uploadMultipleImages,
+  deleteSingleImage,
+} from "../utils/image.service.js";
 
 export const RestaurantGetData = async (req, res, next) => {
   try {
