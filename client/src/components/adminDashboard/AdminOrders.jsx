@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import api from "../../config/api.config";
 import toast from "react-hot-toast";
 import { LoadingSpinner, EmptyState, DataTable, StatusBadge } from "../common/DashboardShared";
@@ -16,7 +16,7 @@ const AdminOrders = () => {
   const [assignModalOpen, setAssignModalOpen] = useState(false);
   const [selectedRiderId, setSelectedRiderId] = useState("");
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const res = await api.get(`/admin/orders?status=${statusFilter}&search=${searchQuery}`);
       setOrders(res.data.data || []);
@@ -28,7 +28,7 @@ const AdminOrders = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [statusFilter, searchQuery]);
 
   const handleUpdateStatus = async (orderId, newStatus) => {
     try {
@@ -60,7 +60,7 @@ const AdminOrders = () => {
 
   useEffect(() => {
     fetchData();
-  }, [statusFilter, searchQuery]);
+  }, [fetchData]);
 
   if (loading) return <LoadingSpinner message="Loading orders..." />;
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import api from "../../config/api.config";
 import toast from "react-hot-toast";
 import { LoadingSpinner, EmptyState } from "../common/DashboardShared";
@@ -20,7 +20,7 @@ const AddressBook = () => {
     isDefault: false,
   });
 
-  const fetchAddresses = async () => {
+  const fetchAddresses = useCallback(async () => {
     try {
       const res = await api.get("/customer/addresses");
       setAddresses(res.data.data || []);
@@ -29,7 +29,7 @@ const AddressBook = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -99,7 +99,7 @@ const AddressBook = () => {
 
   useEffect(() => {
     fetchAddresses();
-  }, []);
+  }, [fetchAddresses]);
 
   if (loading) return <LoadingSpinner message="Loading saved addresses..." />;
 

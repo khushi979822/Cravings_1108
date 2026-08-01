@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useContext } from "react";
+import { createContext, useState, useContext } from "react";
 
 const AuthContext = createContext();
 
@@ -16,16 +16,14 @@ const getUserFromStorage = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUserState] = useState(getUserFromStorage);
-  const [isLogin, setIsLogin] = useState(!!user);
-  const [role, setRoleState] = useState(user?.userType || null);
+  const [roleState, setRoleState] = useState(() => getUserFromStorage()?.userType || null);
 
-  useEffect(() => {
-    setIsLogin(!!user);
-    setRoleState(user?.userType || null);
-  }, [user]);
+  const isLogin = !!user;
+  const role = user?.userType || roleState;
 
   const setUser = (value, remember = false) => {
     setUserState(value);
+    setRoleState(value?.userType || null);
     if (value) {
       const shouldRemember = remember || !!localStorage.getItem("cravingUser");
       if (shouldRemember) {
@@ -40,6 +38,8 @@ export const AuthProvider = ({ children }) => {
       sessionStorage.removeItem("cravingUser");
     }
   };
+
+  const setIsLogin = () => {};
 
   const setRole = (value) => {
     setRoleState(value);

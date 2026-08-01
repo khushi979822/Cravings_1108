@@ -65,23 +65,28 @@ const OrderNow = () => {
   const [selectedType, setSelectedType] = useState("all");
   const [showOpenOnly, setShowOpenOnly] = useState(false);
 
-  const fetchRestaurants = async () => {
-    try {
-      setIsLoading(true);
-      const response = await api.get("/public/restaurants");
-      setRestaurants(response.data.data || []);
-    } catch (error) {
-      toast.error(
-        error.response?.data?.message ||
-          "Failed to fetch restaurants. Please try again.",
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
+    let isSubscribed = true;
+    const fetchRestaurants = async () => {
+      try {
+        setIsLoading(true);
+        const response = await api.get("/public/restaurants");
+        if (isSubscribed) setRestaurants(response.data.data || []);
+      } catch (error) {
+        if (isSubscribed) {
+          toast.error(
+            error.response?.data?.message ||
+              "Failed to fetch restaurants. Please try again.",
+          );
+        }
+      } finally {
+        if (isSubscribed) setIsLoading(false);
+      }
+    };
     fetchRestaurants();
+    return () => {
+      isSubscribed = false;
+    };
   }, []);
 
   const filteredRestaurants = useMemo(() => {

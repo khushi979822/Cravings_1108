@@ -102,7 +102,7 @@ const RestaurantInformation = () => {
   const handleSaveRestaurant = async () => {
     try {
       setIsLoading(true);
-      await api.put("/restaurant/update-restaurant-info", {
+      const res = await api.put("/restaurant/update-restaurant-info", {
         restaurantName: restaurantFormData.restaurantName,
         description: restaurantFormData.description,
         restaurantType: restaurantFormData.restaurantType,
@@ -112,7 +112,7 @@ const RestaurantInformation = () => {
         openingTime: restaurantFormData.openingTime,
         closingTime: restaurantFormData.closingTime,
       });
-      await fetchRestaurantData();
+      if (res.data.data) setRestaurantData(res.data.data);
       setEditingRestaurant(false);
       toast.success("Restaurant information updated successfully!");
     } catch (error) {
@@ -141,31 +141,36 @@ const RestaurantInformation = () => {
     setEditingRestaurant(false);
   };
 
-  const fetchRestaurantData = async () => {
-    try {
-      setIsLoadingRestaurant(true);
-
-      const res = await api.get(
-        `/restaurant/get-resturant-data?id=${user._id}`,
-      );
-      setRestaurantData(res.data.data);
-    } catch (error) {
-      toast.error(
-        error.response?.data?.message ||
-          "Unknown error occurred fetching restaurant. Please try again.",
-      );
-      setLoadingRestaurantError(
-        error.response?.data?.message ||
-          "Unknown error occurred fetching restaurant. Please try again.",
-      );
-    } finally {
-      setIsLoadingRestaurant(false);
-    }
-  };
-
   useEffect(() => {
+    if (!user?._id) return;
+    let isSubscribed = true;
+    const fetchRestaurantData = async () => {
+      try {
+        setIsLoadingRestaurant(true);
+        const res = await api.get(
+          `/restaurant/get-resturant-data?id=${user._id}`,
+        );
+        if (isSubscribed) setRestaurantData(res.data.data);
+      } catch (error) {
+        if (isSubscribed) {
+          toast.error(
+            error.response?.data?.message ||
+              "Unknown error occurred fetching restaurant. Please try again.",
+          );
+          setLoadingRestaurantError(
+            error.response?.data?.message ||
+              "Unknown error occurred fetching restaurant. Please try again.",
+          );
+        }
+      } finally {
+        if (isSubscribed) setIsLoadingRestaurant(false);
+      }
+    };
     fetchRestaurantData();
-  }, [user]);
+    return () => {
+      isSubscribed = false;
+    };
+  }, [user?._id]);
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import api from "../../config/api.config";
 import toast from "react-hot-toast";
 import { LoadingSpinner, EmptyState, StatusBadge } from "../common/DashboardShared";
@@ -23,7 +23,7 @@ const CustomerOrders = () => {
   const [riderReview, setRiderReview] = useState("");
   const [submittingReview, setSubmittingReview] = useState(false);
 
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     try {
       const res = await api.get(`/customer/orders?status=${statusFilter}&search=${searchQuery}`);
       setOrders(res.data.data || []);
@@ -32,7 +32,7 @@ const CustomerOrders = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [statusFilter, searchQuery]);
 
   const handleCancelOrder = async (orderId) => {
     if (!window.confirm("Are you sure you want to cancel this order?")) return;

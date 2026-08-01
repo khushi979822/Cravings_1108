@@ -1,26 +1,26 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import api from "../../config/api.config";
 import toast from "react-hot-toast";
-import { LoadingSpinner, EmptyState, DataTable } from "../common/DashboardShared";
+import { LoadingSpinner, EmptyState, DataTable, StatusBadge } from "../common/DashboardShared";
 
 const RiderOrders = () => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchHistory = async () => {
+  const fetchHistory = useCallback(async () => {
     try {
-      const res = await api.get("/rider/delivery-history");
+      const res = await api.get("/rider/history");
       setHistory(res.data.data || []);
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to load delivery history");
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchHistory();
-  }, []);
+  }, [fetchHistory]);
 
   if (loading) return <LoadingSpinner message="Loading delivery history..." />;
 

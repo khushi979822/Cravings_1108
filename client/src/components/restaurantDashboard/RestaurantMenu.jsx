@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { FaAward } from "react-icons/fa";
 import { LuPencilLine, LuTrash2, LuEye, LuChevronDown, LuLoaderCircle } from "react-icons/lu";
 import { AiTwotoneLike } from "react-icons/ai";
@@ -31,7 +31,7 @@ const RestaurantMenu = () => {
   const [modalMode, setModalMode] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
 
-  const fetchMenu = async () => {
+  const fetchMenu = useCallback(async () => {
     try {
       setIsLoading(true);
       const res = await api.get("/restaurant/menu");
@@ -42,11 +42,11 @@ const RestaurantMenu = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchMenu();
-  }, []);
+  }, [fetchMenu]);
 
   const handleUpdateItem = (updatedItem) => {
     setMenuItems((prev) =>

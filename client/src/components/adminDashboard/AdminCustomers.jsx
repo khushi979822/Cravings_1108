@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import api from "../../config/api.config";
 import toast from "react-hot-toast";
 import { LoadingSpinner, EmptyState, DataTable } from "../common/DashboardShared";
@@ -8,7 +8,7 @@ const AdminCustomers = () => {
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const res = await api.get("/admin/customers");
       setCustomers(res.data.data || []);
@@ -17,11 +17,11 @@ const AdminCustomers = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const handleToggleStatus = async (user) => {
-    const nextActive = !user.profile.isActive;
-    const nextStatus = nextActive ? "verified" : "suspended";
+    const nextActive = !user.isActive;
+    const nextStatus = nextActive ? "active" : "blocked";
     try {
       await api.patch(`/admin/customers/${user._id}/status`, {
         isActive: nextActive,
@@ -36,7 +36,7 @@ const AdminCustomers = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   if (loading) return <LoadingSpinner message="Loading customer accounts..." />;
 

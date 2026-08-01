@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import api from "../../config/api.config";
 import toast from "react-hot-toast";
 import { LoadingSpinner, EmptyState } from "../common/DashboardShared";
@@ -8,7 +8,7 @@ const WishList = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchFavourites = async () => {
+  const fetchFavourites = useCallback(async () => {
     try {
       const res = await api.get("/customer/favourites");
       setItems(res.data.data || []);
@@ -17,7 +17,7 @@ const WishList = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const removeFavourite = async (foodId) => {
     try {
@@ -31,7 +31,7 @@ const WishList = () => {
 
   useEffect(() => {
     fetchFavourites();
-  }, []);
+  }, [fetchFavourites]);
 
   if (loading) return <LoadingSpinner message="Loading favorites..." />;
 

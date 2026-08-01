@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import api from "../../config/api.config";
 import toast from "react-hot-toast";
 import { LoadingSpinner, EmptyState, DataTable } from "../common/DashboardShared";
@@ -13,7 +13,7 @@ const AdminCategories = () => {
     description: "",
   });
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const res = await api.get("/admin/categories");
       setCategories(res.data.data || []);
@@ -22,7 +22,7 @@ const AdminCategories = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const handleToggleStatus = async (cat) => {
     const nextStatus = !cat.isActive;

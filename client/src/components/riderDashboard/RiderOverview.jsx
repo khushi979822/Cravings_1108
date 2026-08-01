@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import api from "../../config/api.config";
 import toast from "react-hot-toast";
 import { LoadingSpinner, StatCard, StatusBadge } from "../common/DashboardShared";
@@ -10,7 +10,7 @@ const RiderOverview = () => {
   const [activeOrder, setActiveOrder] = useState(null);
   const [toggling, setToggling] = useState(false);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const statsRes = await api.get("/rider/dashboard");
       setStats(statsRes.data.data);
@@ -22,7 +22,7 @@ const RiderOverview = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const handleToggleAvailability = async () => {
     setToggling(true);
@@ -60,7 +60,7 @@ const RiderOverview = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   if (loading) return <LoadingSpinner message="Loading Rider Dashboard..." />;
   if (!stats) return <div className="text-center py-10 text-red-500">Failed to load statistics.</div>;

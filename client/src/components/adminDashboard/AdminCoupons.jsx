@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import api from "../../config/api.config";
 import toast from "react-hot-toast";
 import { LoadingSpinner, EmptyState, DataTable } from "../common/DashboardShared";
@@ -16,7 +16,7 @@ const AdminCoupons = () => {
     expiryDate: "",
   });
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const res = await api.get("/admin/coupons");
       setCoupons(res.data.data || []);
@@ -25,7 +25,7 @@ const AdminCoupons = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const handleToggleStatus = async (coupon) => {
     const nextStatus = !coupon.isActive;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import api from "../../config/api.config";
 import toast from "react-hot-toast";
 import { LoadingSpinner, StatCard } from "../common/DashboardShared";
@@ -8,7 +8,7 @@ const AdminOverview = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async () => {
     try {
       const res = await api.get("/admin/dashboard");
       setStats(res.data.data);
@@ -17,11 +17,11 @@ const AdminOverview = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchStats();
-  }, []);
+  }, [fetchStats]);
 
   if (loading) return <LoadingSpinner message="Loading analytics..." />;
   if (!stats) return <div className="text-center py-10 text-red-500">Failed to load statistics.</div>;

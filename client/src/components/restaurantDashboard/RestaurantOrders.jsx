@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 const RestaurantOrders = () => {
   return (
     <div className="overflow-y-auto h-full">
