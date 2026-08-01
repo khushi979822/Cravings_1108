@@ -4,6 +4,7 @@ import heroImage from "../images/foodTable.webp";
 import api from "../config/api.config";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
+import ForgotPasswordModal from "../components/commonModals/ForgotPasswordModal";
 
 function Login() {
   const { setUser, setIsLogin, setRole } = useAuth();
@@ -18,6 +19,7 @@ function Login() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -146,9 +148,13 @@ function Login() {
               Remember
             </label>
 
-            <a href="#" className="text-orange-500 hover:text-orange-600">
+            <button
+              type="button"
+              onClick={() => setIsForgotPasswordModalOpen(true)}
+              className="text-orange-500 hover:text-orange-600 font-medium"
+            >
               Forgot password?
-            </a>
+            </button>
           </div>
 
           <button
@@ -177,6 +183,11 @@ function Login() {
           </p>
         </form>
       </div>
+
+      <ForgotPasswordModal
+        open={isForgotPasswordModalOpen}
+        onClose={() => setIsForgotPasswordModalOpen(false)}
+      />
     </div>
   );
 }
