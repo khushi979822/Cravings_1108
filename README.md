@@ -128,3 +128,13 @@ Request Body
 Response Format
 Success Status Codes
 Error Responses
+
+# 👨‍💻 Author
+
+**Khushi Kumari**
+
+Computer Science Engineering Student
+
+Jai Narain College of Technology, Bhopal
+
+MERN Stack Developer
