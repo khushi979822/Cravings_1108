@@ -129,6 +129,19 @@ Response Format
 Success Status Codes
 Error Responses
 
+# 📈 Project Highlights
+
+- MERN Stack Architecture
+- JWT Cookie Authentication
+- Role-Based Authorization
+- Responsive UI
+- RESTful APIs
+- MongoDB Database
+- Secure Password Encryption
+- Modular Backend Architecture
+- Clean React Components
+- Tailwind CSS UI
+
 # 👨‍💻 Author
 
 **Khushi Kumari**
