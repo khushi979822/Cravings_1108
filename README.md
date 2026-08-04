@@ -128,3 +128,26 @@ Request Body
 Response Format
 Success Status Codes
 Error Responses
+
+# 📈 Project Highlights
+
+- MERN Stack Architecture
+- JWT Cookie Authentication
+- Role-Based Authorization
+- Responsive UI
+- RESTful APIs
+- MongoDB Database
+- Secure Password Encryption
+- Modular Backend Architecture
+- Clean React Components
+- Tailwind CSS UI
+
+# 👨‍💻 Author
+
+**Khushi Kumari**
+
+Computer Science Engineering Student
+
+Jai Narain College of Technology, Bhopal
+
+MERN Stack Developer
