@@ -144,7 +144,7 @@ Error Responses
 
 # 👨‍💻 Author
 
-**Khushi Kumari**
+***Khushi Kumari***
 
 Computer Science Engineering Student
 
