@@ -16,7 +16,7 @@ import { AuthProtect } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-router.use(AuthProtect); // Protect all rider routes.
+router.use(AuthProtect); // Protect all the rider routes.
 
 router.get("/dashboard", getRiderDashboard);
 router.patch("/availability", toggleRiderAvailability);
