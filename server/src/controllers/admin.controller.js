@@ -8,7 +8,7 @@ import Category from "../models/category.model.js";
 import Coupon from "../models/coupon.model.js";
 import mongoose from "mongoose";
 
-// Helper check admin role
+// Helper check admin role.
 const verifyAdmin = (user) => {
   return user && user.userType === "admin";
 };
