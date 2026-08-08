@@ -24,7 +24,7 @@ export const getAdminDashboard = async (req, res, next) => {
     const totalRiders = await User.countDocuments({ userType: "rider" });
     const totalRestaurants = await Restaurant.countDocuments({});
     
-    // Count total food items across all menus
+    // Count total food items across all the menus
     const menus = await Menu.find({});
     let totalFoodItems = 0;
     menus.forEach(m => totalFoodItems += m.menuItems.length);
