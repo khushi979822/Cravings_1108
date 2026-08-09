@@ -127,7 +127,7 @@ export const SendOtp = async (req, res, next) => {
       .toString()
       .slice(0, 6);
 
-    //Send OTP via Email
+    //Send OTP via Email.
     const hashedOTP = await bcrypt.hash(newOTP, 10);
     const existingOTP = await OTP.findOne({ email });
     if (existingOTP) {
