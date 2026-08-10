@@ -66,7 +66,7 @@ export const UpdateUserPassword = async (req, res, next) => {
       return next(error);
     }
 
-    // User Already Verified By Auth Protect Middleware
+    // User Already Verified By Auth Protect Middleware.
     // const existingUser = await User.findOne({ email });
     // if (!existingUser) {
     //   const error = new Error("Email not registred");
