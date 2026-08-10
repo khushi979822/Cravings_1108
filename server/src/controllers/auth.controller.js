@@ -122,7 +122,7 @@ export const SendOtp = async (req, res, next) => {
       return next(error);
     }
 
-    // Generate and send OTP here
+    // Generate and send OTP here.
     const newOTP = (Math.floor(Math.random() * 1000000) + 100000)
       .toString()
       .slice(0, 6);
