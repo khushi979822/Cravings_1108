@@ -2,7 +2,7 @@ import Rider from "../models/rider.model.js";
 import Order from "../models/order.model.js";
 import mongoose from "mongoose";
 
-// Helper to ensure rider profile exists
+// Helper to ensure rider profile exists.
 const getOrCreateRider = async (userId) => {
   let riderObj = await Rider.findOne({ riderId: userId });
   if (!riderObj) {
