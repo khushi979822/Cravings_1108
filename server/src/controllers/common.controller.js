@@ -74,7 +74,7 @@ export const UpdateUserPassword = async (req, res, next) => {
     //   return next(error);
     // }
 
-    // we can use req.user to get the current user since the user is already verified by the auth protect middleware
+    // we can use req.user to get the current user since the user is already verified by the auth protect middleware.
     const currentUser = req.user;
 
     const isPasswordMatch = await bcrypt.compare(
