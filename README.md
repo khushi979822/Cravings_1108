@@ -2,6 +2,18 @@ This is Craving Project
 using MERN Stack
 Cravings is a modern food delivery site.
 
+# 🚀 Introduction
+
+Cravings is designed to provide a complete online food ordering ecosystem.
+
+Customers can browse restaurants, search dishes, place orders, and track deliveries.
+
+Restaurant owners can manage menus, orders, and earnings.
+
+Riders receive assigned deliveries and update delivery status.
+
+Admins control the entire platform through analytics and management tools.
+
 ## 🚀 Features
 
 - 🏠 Beautiful and responsive Home Page
