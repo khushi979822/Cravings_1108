@@ -31,7 +31,7 @@ Riders receive assigned deliveries and update delivery status.
 
 Admins control the entire platform through analytics and management tools.
 
-## 🚀 Features
+# 🚀 Features
 
 - 🏠 Beautiful and responsive Home Page
 - 🔐 User Authentication (Login & Register
