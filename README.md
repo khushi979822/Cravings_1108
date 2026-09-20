@@ -54,7 +54,7 @@ Admins control the entire platform through analytics and management tools.
 
 ---
 
-## 📂 Project Structure
+# 📂 Project Structure
 
 ```
 src/
