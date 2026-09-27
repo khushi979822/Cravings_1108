@@ -2,6 +2,7 @@
 using MERN Stack
 Cravings is a modern food delivery site.
 
+---
 
 # 📌 Table of Contents
 
