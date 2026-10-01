@@ -1,5 +1,5 @@
 # This is Craving Project 
-using MERN Stack
+Using MERN Stack
 Cravings is a modern food delivery site.
 
 ---
