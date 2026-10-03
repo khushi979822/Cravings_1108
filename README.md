@@ -85,7 +85,7 @@ src/
 
 ---
 
-## 🎯 Main Pages
+# 🎯 Main Pages
 
 ### 🏠 Home
 - Hero Banner
